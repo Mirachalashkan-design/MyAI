@@ -1,1 +1,8 @@
+/* MiMiAi Style */
+/* Bir sonraki adımda tüm tasarımı buraya ekleyeceğiz. */
 
+body{
+    margin:0;
+    padding:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
