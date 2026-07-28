@@ -1,213 +1,33 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MiMiAi</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MiMiAi Test</title>
 </head>
 
 <body style="
-  margin:0;
-  min-height:100vh;
-  background:linear-gradient(145deg,#fffaff,#eadcf7);
-  font-family:Arial,sans-serif;
-  color:#493758;
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#d9c2f0;
+  font-family:Arial,sans-serif;
 ">
 
-  <main style="
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    background:#fffaff;
-  ">
-
-    <header style="
-      padding:18px;
-      display:flex;
-      align-items:center;
-      gap:14px;
-      color:white;
-      background:linear-gradient(135deg,#a98bd4,#d8c2eb);
-      box-shadow:0 5px 20px rgba(100,70,130,.18);
-    ">
-
-      <div style="
-        width:64px;
-        height:64px;
-        flex-shrink:0;
-        border-radius:50%;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        background:#fffaff;
-        color:#8e69b2;
-        border:2px solid rgba(255,255,255,.8);
-        font-family:Georgia,serif;
-        font-size:38px;
-        box-shadow:0 8px 20px rgba(70,40,100,.2);
-      ">
-        M
-      </div>
-
-      <div>
-        <h1 style="
-          margin:0;
-          font-family:Georgia,serif;
-          font-size:30px;
-          font-weight:normal;
-        ">
-          MiMiAi
-        </h1>
-
-        <p style="margin:4px 0 0;font-size:13px;">
-          Nazik, enerjik ve dürüst AI arkadaşın
-        </p>
-      </div>
-    </header>
-
-    <nav style="
-      padding:12px;
-      display:flex;
-      gap:8px;
-      overflow-x:auto;
-      background:#f5ecfb;
-      border-bottom:1px solid #dfccec;
-    ">
-      <button onclick="setMode(this,'normal')" style="padding:9px 13px;border:0;border-radius:20px;background:#a98bd4;color:white;">💜 Normal</button>
-      <button onclick="setMode(this,'teacher')" style="padding:9px 13px;border:1px solid #d8c2e9;border-radius:20px;background:white;color:#654b78;">📚 Öğretmen</button>
-      <button onclick="setMode(this,'chef')" style="padding:9px 13px;border:1px solid #d8c2e9;border-radius:20px;background:white;color:#654b78;">🍝 Şef MiMi</button>
-      <button onclick="setMode(this,'fun')" style="padding:9px 13px;border:1px solid #d8c2e9;border-radius:20px;background:white;color:#654b78;">🎮 Eğlence</button>
-      <button onclick="setMode(this,'research')" style="padding:9px 13px;border:1px solid #d8c2e9;border-radius:20px;background:white;color:#654b78;">🔎 Araştırma</button>
-    </nav>
-
-    <section id="chat" style="
-      flex:1;
-      padding:18px 14px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      overflow-y:auto;
-      background:linear-gradient(180deg,#fffaff,#f7effc);
-    ">
-      <div style="
-        max-width:82%;
-        padding:13px 15px;
-        border-radius:18px 18px 18px 5px;
-        background:#eee1f7;
-        color:#493758;
-        line-height:1.45;
-      ">
-        Merhaba! Ben MiMiAi 🌸<br><br>
-        Sana bugün nasıl yardımcı olabilirim?
-      </div>
-    </section>
-
-    <div style="
-      padding:12px;
-      display:flex;
-      gap:8px;
-      background:white;
-      border-top:1px solid #dfccec;
-    ">
-      <input
-        id="input"
-        type="text"
-        placeholder="Bir şey yaz..."
-        style="
-          flex:1;
-          min-width:0;
-          padding:13px;
-          border:1px solid #d5bfe6;
-          border-radius:17px;
-          font-size:16px;
-          outline:none;
-        "
-      >
-
-      <button
-        onclick="sendMessage()"
-        style="
-          padding:0 18px;
-          border:0;
-          border-radius:16px;
-          background:#a98bd4;
-          color:white;
-          font-weight:bold;
-        "
-      >
-        Gönder
-      </button>
-    </div>
-
-  </main>
-
-  <script>
-    let currentMode = "normal";
-
-    function addMessage(text, isUser) {
-      const chat = document.getElementById("chat");
-      const bubble = document.createElement("div");
-
-      bubble.textContent = text;
-
-      bubble.style.maxWidth = "82%";
-      bubble.style.padding = "13px 15px";
-      bubble.style.borderRadius = isUser
-        ? "18px 18px 5px 18px"
-        : "18px 18px 18px 5px";
-      bubble.style.alignSelf = isUser ? "flex-end" : "flex-start";
-      bubble.style.background = isUser ? "#a98bd4" : "#eee1f7";
-      bubble.style.color = isUser ? "white" : "#493758";
-      bubble.style.lineHeight = "1.45";
-
-      chat.appendChild(bubble);
-      chat.scrollTop = chat.scrollHeight;
-    }
-
-    function sendMessage() {
-      const input = document.getElementById("input");
-      const text = input.value.trim();
-
-      if (!text) return;
-
-      addMessage(text, true);
-      input.value = "";
-
-      setTimeout(() => {
-        if (currentMode === "chef") {
-          addMessage("Şef MiMi burada 🍝 Evde hangi malzemeler var?", false);
-        } else if (currentMode === "teacher") {
-          addMessage("Öğretmen modundayım 📚 Hangi konuyu öğrenmek istiyorsun?", false);
-        } else if (currentMode === "fun") {
-          addMessage("Eğlence modu açık 🎮 Oyun mu, bilmece mi, soğuk espri mi?", false);
-        } else if (currentMode === "research") {
-          addMessage("Araştırma modundayım 🔎 Gerçek AI bağlantısını birazdan ekleyeceğiz.", false);
-        } else {
-          addMessage("Seni duydum 🌸 Gerçek AI beynimi sonraki adımda bağlayacağız.", false);
-        }
-      }, 400);
-    }
-
-    function setMode(button, mode) {
-      currentMode = mode;
-
-      document.querySelectorAll("nav button").forEach(item => {
-        item.style.background = "white";
-        item.style.color = "#654b78";
-        item.style.border = "1px solid #d8c2e9";
-      });
-
-      button.style.background = "#a98bd4";
-      button.style.color = "white";
-      button.style.border = "0";
-
-      addMessage(button.textContent.trim() + " modu açıldı.", false);
-    }
-
-    document.getElementById("input").addEventListener("keydown", event => {
-      if (event.key === "Enter") sendMessage();
-    });
-  </script>
+  <div style="
+    background:white;
+    color:#5f4278;
+    padding:35px;
+    border-radius:25px;
+    text-align:center;
+    box-shadow:0 15px 40px rgba(80,50,110,.25);
+  ">
+    <div style="font-size:55px;">🌸</div>
+    <h1 style="margin:10px 0;">MiMiAi</h1>
+    <p style="margin:0;">Lila tasarım testi çalışıyor.</p>
+  </div>
 
 </body>
 </html>
