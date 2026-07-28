@@ -1,535 +1,213 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#a98bd4" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MiMiAi</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
-    }
-
-    body {
-      min-height: 100vh;
-      padding: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      color: #463553;
-      background:
-        radial-gradient(circle at 15% 10%, #f9eaff 0, transparent 34%),
-        radial-gradient(circle at 90% 90%, #eadbff 0, transparent 36%),
-        linear-gradient(145deg, #fffaff, #f0e5fa);
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 540px;
-      height: min(850px, 94vh);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      border: 1px solid rgba(116, 81, 151, 0.18);
-      border-radius: 30px;
-      background: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 25px 70px rgba(79, 50, 104, 0.2);
-      backdrop-filter: blur(18px);
-    }
-
-    header {
-      padding: 16px 18px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      color: white;
-      background: linear-gradient(135deg, #9270bd, #b99bdb 60%, #ceb8e7);
-    }
-
-    .logo {
-      width: 66px;
-      height: 66px;
-      flex: 0 0 66px;
-      overflow: hidden;
-      border: 2px solid rgba(255, 255, 255, 0.8);
-      border-radius: 50%;
-      background: #fbf7ff;
-      box-shadow: 0 9px 24px rgba(77, 47, 100, 0.22);
-    }
-
-    .logo svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .brand {
-      min-width: 0;
-    }
-
-    .brand h1 {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: 29px;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-    }
-
-    .brand p {
-      margin: 4px 0 0;
-      font-size: 13px;
-      opacity: 0.94;
-    }
-
-    .status {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #d8ffcf;
-      box-shadow: 0 0 0 4px rgba(216, 255, 207, 0.17);
-    }
-
-    .modes {
-      padding: 11px 12px;
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      border-bottom: 1px solid #eadff3;
-      background: #fcf9ff;
-      scrollbar-width: none;
-    }
-
-    .modes::-webkit-scrollbar {
-      display: none;
-    }
-
-    .mode {
-      padding: 8px 12px;
-      border: 1px solid #ddcdea;
-      border-radius: 999px;
-      color: #684c80;
-      background: white;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .mode.active {
-      color: white;
-      border-color: #9d7ac8;
-      background: linear-gradient(135deg, #9270bd, #b99bdb);
-    }
-
-    #chat {
-      flex: 1;
-      padding: 18px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      overflow-y: auto;
-      background:
-        linear-gradient(rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.58)),
-        radial-gradient(circle at 20% 20%, #f2e7fc, transparent 35%);
-    }
-
-    .message {
-      max-width: 85%;
-      padding: 12px 14px;
-      border-radius: 19px;
-      font-size: 15px;
-      line-height: 1.45;
-      white-space: pre-wrap;
-      animation: appear 0.22s ease;
-    }
-
-    .bot {
-      align-self: flex-start;
-      color: #4d385d;
-      background: #f0e6f8;
-      border-bottom-left-radius: 5px;
-    }
-
-    .user {
-      align-self: flex-end;
-      color: white;
-      background: linear-gradient(135deg, #8f6ab9, #b596d7);
-      border-bottom-right-radius: 5px;
-    }
-
-    .typing {
-      font-style: italic;
-      opacity: 0.7;
-    }
-
-    .composer {
-      padding: 12px;
-      display: flex;
-      gap: 8px;
-      border-top: 1px solid #eadff3;
-      background: rgba(255, 255, 255, 0.97);
-    }
-
-    #input {
-      min-width: 0;
-      flex: 1;
-      padding: 13px 14px;
-      border: 1px solid #d9c7e8;
-      border-radius: 18px;
-      outline: none;
-      color: #443250;
-      background: white;
-    }
-
-    #input:focus {
-      border-color: #9d7ac8;
-      box-shadow: 0 0 0 3px rgba(157, 122, 200, 0.15);
-    }
-
-    #send {
-      padding: 0 18px;
-      border: none;
-      border-radius: 17px;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      background: linear-gradient(135deg, #8e68b8, #b495d5);
-    }
-
-    #send:active {
-      transform: scale(0.97);
-    }
-
-    footer {
-      padding: 7px 10px 10px;
-      text-align: center;
-      font-size: 11px;
-      color: #8b7997;
-      background: white;
-    }
-
-    @keyframes appear {
-      from {
-        opacity: 0;
-        transform: translateY(6px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 420px) {
-      body {
-        padding: 0;
-      }
-
-      .app {
-        height: 100vh;
-        border: none;
-        border-radius: 0;
-      }
-
-      .status {
-        display: none;
-      }
-    }
-  </style>
 </head>
 
-<body>
-  <main class="app">
-    <header>
-      <div class="logo" aria-label="MiMiAi çiçekli logosu">
-        <svg viewBox="0 0 100 100" role="img" aria-label="Lila çiçekli M logosu">
-          <defs>
-            <linearGradient id="lavender" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#77529e" />
-              <stop offset="100%" stop-color="#bd9bdb" />
-            </linearGradient>
-          </defs>
+<body style="
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(145deg,#fffaff,#eadcf7);
+  font-family:Arial,sans-serif;
+  color:#493758;
+">
 
-          <circle cx="50" cy="50" r="48" fill="#fbf7ff" />
-          <circle
-            cx="50"
-            cy="50"
-            r="45"
-            fill="none"
-            stroke="#d7c1e9"
-            stroke-width="2"
-          />
+  <main style="
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:#fffaff;
+  ">
 
-          <path
-            d="M24 72 V30 L49 62 L75 30 V72"
-            fill="none"
-            stroke="url(#lavender)"
-            stroke-width="7"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+    <header style="
+      padding:18px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      color:white;
+      background:linear-gradient(135deg,#a98bd4,#d8c2eb);
+      box-shadow:0 5px 20px rgba(100,70,130,.18);
+    ">
 
-          <path
-            d="M20 63 C15 50, 18 38, 30 29"
-            fill="none"
-            stroke="#8d6ab0"
-            stroke-width="2.5"
-            stroke-linecap="round"
-          />
-
-          <ellipse
-            cx="20"
-            cy="55"
-            rx="5"
-            ry="9"
-            transform="rotate(-35 20 55)"
-            fill="#c8a9df"
-          />
-
-          <ellipse
-            cx="22"
-            cy="41"
-            rx="5"
-            ry="9"
-            transform="rotate(35 22 41)"
-            fill="#ae88cc"
-          />
-
-          <ellipse
-            cx="30"
-            cy="31"
-            rx="5"
-            ry="9"
-            transform="rotate(55 30 31)"
-            fill="#d9c4e9"
-          />
-
-          <circle cx="20" cy="63" r="3.5" fill="#d5afc9" />
-          <circle cx="29" cy="44" r="4" fill="#ead8ee" />
-          <circle cx="29" cy="44" r="1.5" fill="#9a76b9" />
-
-          <path
-            d="M75 26 L78 33 L85 36 L78 39 L75 46 L72 39 L65 36 L72 33 Z"
-            fill="#a47ac4"
-          />
-        </svg>
+      <div style="
+        width:64px;
+        height:64px;
+        flex-shrink:0;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:#fffaff;
+        color:#8e69b2;
+        border:2px solid rgba(255,255,255,.8);
+        font-family:Georgia,serif;
+        font-size:38px;
+        box-shadow:0 8px 20px rgba(70,40,100,.2);
+      ">
+        M
       </div>
 
-      <div class="brand">
-        <h1>MiMiAi</h1>
-        <p>Nazik, enerjik ve dürüst AI arkadaşın</p>
-      </div>
+      <div>
+        <h1 style="
+          margin:0;
+          font-family:Georgia,serif;
+          font-size:30px;
+          font-weight:normal;
+        ">
+          MiMiAi
+        </h1>
 
-      <div class="status">
-        <span class="status-dot"></span>
-        Çevrimiçi
+        <p style="margin:4px 0 0;font-size:13px;">
+          Nazik, enerjik ve dürüst AI arkadaşın
+        </p>
       </div>
     </header>
 
-    <nav class="modes" aria-label="MiMiAi modları">
-      <button class="mode active" data-mode="normal" type="button">
-        💜 Normal
-      </button>
-
-      <button class="mode" data-mode="teacher" type="button">
-        📚 Öğretmen
-      </button>
-
-      <button class="mode" data-mode="chef" type="button">
-        🍝 Şef MiMi
-      </button>
-
-      <button class="mode" data-mode="fun" type="button">
-        🎮 Eğlence
-      </button>
-
-      <button class="mode" data-mode="research" type="button">
-        🔎 Araştırma
-      </button>
+    <nav style="
+      padding:12px;
+      display:flex;
+      gap:8px;
+      overflow-x:auto;
+      background:#f5ecfb;
+      border-bottom:1px solid #dfccec;
+    ">
+      <button onclick="setMode(this,'normal')" style="padding:9px 13px;border:0;border-radius:20px;background:#a98bd4;color:white;">💜 Normal</button>
+      <button onclick="setMode(this,'teacher')" style="padding:9px 13px;border:1px solid #d8c2e9;border-radius:20px;background:white;color:#654b78;">📚 Öğretmen</button>
+      <button onclick="setMode(this,'chef')" style="padding:9px 13px;border:1px solid #d8c2e9;border-radius:20px;background:white;color:#654b78;">🍝 Şef MiMi</button>
+      <button onclick="setMode(this,'fun')" style="padding:9px 13px;border:1px solid #d8c2e9;border-radius:20px;background:white;color:#654b78;">🎮 Eğlence</button>
+      <button onclick="setMode(this,'research')" style="padding:9px 13px;border:1px solid #d8c2e9;border-radius:20px;background:white;color:#654b78;">🔎 Araştırma</button>
     </nav>
 
-    <section id="chat" aria-live="polite">
-      <div class="message bot">
-Merhaba! Ben MiMiAi 🌸
-
-Sana bugün nasıl yardımcı olabilirim?
+    <section id="chat" style="
+      flex:1;
+      padding:18px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      overflow-y:auto;
+      background:linear-gradient(180deg,#fffaff,#f7effc);
+    ">
+      <div style="
+        max-width:82%;
+        padding:13px 15px;
+        border-radius:18px 18px 18px 5px;
+        background:#eee1f7;
+        color:#493758;
+        line-height:1.45;
+      ">
+        Merhaba! Ben MiMiAi 🌸<br><br>
+        Sana bugün nasıl yardımcı olabilirim?
       </div>
     </section>
 
-    <div class="composer">
+    <div style="
+      padding:12px;
+      display:flex;
+      gap:8px;
+      background:white;
+      border-top:1px solid #dfccec;
+    ">
       <input
         id="input"
         type="text"
         placeholder="Bir şey yaz..."
-        autocomplete="off"
-        aria-label="Mesaj yaz"
-      />
+        style="
+          flex:1;
+          min-width:0;
+          padding:13px;
+          border:1px solid #d5bfe6;
+          border-radius:17px;
+          font-size:16px;
+          outline:none;
+        "
+      >
 
-      <button id="send" type="button">
+      <button
+        onclick="sendMessage()"
+        style="
+          padding:0 18px;
+          border:0;
+          border-radius:16px;
+          background:#a98bd4;
+          color:white;
+          font-weight:bold;
+        "
+      >
         Gönder
       </button>
     </div>
 
-    <footer>MiMiAi • İlk çalışan sürüm</footer>
   </main>
 
   <script>
-    const chat = document.getElementById("chat");
-    const input = document.getElementById("input");
-    const sendButton = document.getElementById("send");
-    const modeButtons = document.querySelectorAll(".mode");
-
     let currentMode = "normal";
 
-    function addMessage(text, type, extraClass = "") {
-      const message = document.createElement("div");
+    function addMessage(text, isUser) {
+      const chat = document.getElementById("chat");
+      const bubble = document.createElement("div");
 
-      message.className =
-        `message ${type} ${extraClass}`.trim();
+      bubble.textContent = text;
 
-      message.textContent = text;
-      chat.appendChild(message);
+      bubble.style.maxWidth = "82%";
+      bubble.style.padding = "13px 15px";
+      bubble.style.borderRadius = isUser
+        ? "18px 18px 5px 18px"
+        : "18px 18px 18px 5px";
+      bubble.style.alignSelf = isUser ? "flex-end" : "flex-start";
+      bubble.style.background = isUser ? "#a98bd4" : "#eee1f7";
+      bubble.style.color = isUser ? "white" : "#493758";
+      bubble.style.lineHeight = "1.45";
+
+      chat.appendChild(bubble);
       chat.scrollTop = chat.scrollHeight;
-
-      return message;
-    }
-
-    function getReply(text) {
-      const lower = text.toLocaleLowerCase("tr");
-
-      if (
-        lower.includes("mimi oyun aç") ||
-        lower.includes("oyun aç")
-      ) {
-        return "MiMi Oyun açıldı 🎮\n\nAklımdan 1 ile 10 arasında bir sayı tuttum. Tahmin et!";
-      }
-
-      if (
-        lower.includes("merhaba") ||
-        lower.includes("selam")
-      ) {
-        return "Merhaba! 🌸 Bugün enerjim yerinde. Sen nasılsın?";
-      }
-
-      if (lower.includes("doğum günüm")) {
-        return "İyi ki doğdun 🎉🎂🎁🎈!";
-      }
-
-      if (
-        lower.includes("yalnızım") ||
-        lower.includes("yalnız hissediyorum")
-      ) {
-        return "Böyle hissetmenin nedeni ne? Anlatmak istersen seni dinliyorum.";
-      }
-
-      if (
-        lower.includes("aptalım") ||
-        lower.includes("salakım")
-      ) {
-        return "Ben öyle düşünmüyorum. Bir şeyin zor gelmesi seni aptal yapmaz.";
-      }
-
-      if (lower.includes("başarabilir miyim")) {
-        return "Başaramasan da elinden geleni yapmış olursun. Doğru bir planla şansını ciddi şekilde artırabiliriz.";
-      }
-
-      if (lower.includes("canım sıkılıyor")) {
-        return "Can sıkıntısı beynin düşük bütçeli bir bildirimidir. 😄\n\nMiMi Oyun açmamı ister misin?";
-      }
-
-      if (lower.includes("uyuyamıyorum")) {
-        return "Geri uyumayı dene 😄 Telefonu biraz bırakıp yavaş nefes almak da yardımcı olabilir.";
-      }
-
-      if (lower.includes("makarna")) {
-        return "Makarna doğru bir karar. MiMiAi bunu tamamen tarafsız biçimde söylüyor tabii. 🍝\n\nEvde hangi malzemeler var?";
-      }
-
-      if (currentMode === "chef") {
-        return "Şef MiMi burada 👩‍🍳 Evindeki malzemeleri ve kaç kişilik istediğini yaz.";
-      }
-
-      if (currentMode === "teacher") {
-        return "Öğretmen modundayım 📚 Konuyu yaz; sana adım adım anlatayım.";
-      }
-
-      if (currentMode === "fun") {
-        return "Eğlence modu açık 🎮 Bilmece, soğuk espri veya sayı tahmin oyunu seçebilirsin.";
-      }
-
-      if (currentMode === "research") {
-        return "Araştırma modundayım 🔎 Gerçek internet araştırmasını sonraki aşamada bağlayacağız.";
-      }
-
-      return "Seni anladım. Şu anda ilk deneme sürümündeyim. Gerçek AI beynimi bağladığımızda daha ayrıntılı cevap vereceğim. 🌸";
     }
 
     function sendMessage() {
+      const input = document.getElementById("input");
       const text = input.value.trim();
 
-      if (!text) {
-        return;
-      }
+      if (!text) return;
 
-      addMessage(text, "user");
+      addMessage(text, true);
       input.value = "";
 
-      const typing = addMessage(
-        "MiMiAi düşünüyor...",
-        "bot",
-        "typing"
-      );
-
       setTimeout(() => {
-        typing.remove();
-        addMessage(getReply(text), "bot");
-      }, 550);
+        if (currentMode === "chef") {
+          addMessage("Şef MiMi burada 🍝 Evde hangi malzemeler var?", false);
+        } else if (currentMode === "teacher") {
+          addMessage("Öğretmen modundayım 📚 Hangi konuyu öğrenmek istiyorsun?", false);
+        } else if (currentMode === "fun") {
+          addMessage("Eğlence modu açık 🎮 Oyun mu, bilmece mi, soğuk espri mi?", false);
+        } else if (currentMode === "research") {
+          addMessage("Araştırma modundayım 🔎 Gerçek AI bağlantısını birazdan ekleyeceğiz.", false);
+        } else {
+          addMessage("Seni duydum 🌸 Gerçek AI beynimi sonraki adımda bağlayacağız.", false);
+        }
+      }, 400);
     }
 
-    sendButton.addEventListener("click", sendMessage);
+    function setMode(button, mode) {
+      currentMode = mode;
 
-    input.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        sendMessage();
-      }
-    });
-
-    modeButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        modeButtons.forEach((item) => {
-          item.classList.remove("active");
-        });
-
-        button.classList.add("active");
-        currentMode = button.dataset.mode;
-
-        addMessage(
-          `${button.textContent.trim()} modu açıldı.`,
-          "bot"
-        );
+      document.querySelectorAll("nav button").forEach(item => {
+        item.style.background = "white";
+        item.style.color = "#654b78";
+        item.style.border = "1px solid #d8c2e9";
       });
+
+      button.style.background = "#a98bd4";
+      button.style.color = "white";
+      button.style.border = "0";
+
+      addMessage(button.textContent.trim() + " modu açıldı.", false);
+    }
+
+    document.getElementById("input").addEventListener("keydown", event => {
+      if (event.key === "Enter") sendMessage();
     });
   </script>
+
 </body>
 </html>
