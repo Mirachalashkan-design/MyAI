@@ -1,40 +1,59 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#c6a8e5">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>MiMiAi</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  >
-
   <style>
     :root {
-      --lilac: #b99bd9;
-      --lilac-dark: #74548f;
-      --lilac-light: #eee3f8;
+      --bg-1: #e8dcf7;
+      --bg-2: #f8e8f1;
+      --bg-3: #fff2c9;
+      --bg-4: #d9f1e8;
 
-      --pink: #f4cbdc;
-      --pink-light: #fff0f6;
+      --surface: rgba(255, 255, 255, 0.52);
+      --surface-strong: rgba(255, 255, 255, 0.72);
+      --surface-soft: rgba(255, 255, 255, 0.34);
 
-      --yellow: #f8e8a8;
-      --yellow-light: #fff9dc;
+      --border: rgba(255, 255, 255, 0.72);
+      --border-soft: rgba(255, 255, 255, 0.48);
 
-      --mint: #c9eadc;
-      --mint-light: #effbf6;
+      --text: #473b51;
+      --muted: #7f7188;
+      --accent: #9f79bd;
+      --accent-dark: #6d4f82;
+      --pink: #edb9d0;
+      --mint: #bfe4d5;
+      --yellow: #f3dda0;
 
-      --cream: #fffaf4;
-      --white: #ffffff;
-      --text: #493b53;
-      --muted: #806f89;
-      --border: rgba(102, 73, 121, 0.14);
-      --shadow: rgba(87, 57, 106, 0.17);
+      --shadow:
+        0 30px 80px rgba(79, 57, 94, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.86);
+    }
+
+    body.dark {
+      --bg-1: #241d2d;
+      --bg-2: #302333;
+      --bg-3: #393127;
+      --bg-4: #21352f;
+
+      --surface: rgba(33, 28, 39, 0.68);
+      --surface-strong: rgba(48, 40, 57, 0.84);
+      --surface-soft: rgba(255, 255, 255, 0.05);
+
+      --border: rgba(255, 255, 255, 0.12);
+      --border-soft: rgba(255, 255, 255, 0.08);
+
+      --text: #f4edf7;
+      --muted: #c6b9cc;
+      --accent: #c7a3e2;
+      --accent-dark: #ead8f4;
+
+      --shadow:
+        0 32px 90px rgba(0, 0, 0, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
     }
 
     * {
@@ -43,222 +62,504 @@
 
     html,
     body {
-      margin: 0;
       width: 100%;
       min-height: 100%;
+      margin: 0;
     }
 
     body {
       min-height: 100vh;
-      padding: 16px;
+      padding: 22px;
+
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
 
-      font-family: "Nunito", Arial, sans-serif;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
       color: var(--text);
 
       background:
-        radial-gradient(
-          circle at 8% 8%,
-          rgba(244, 203, 220, 0.95) 0,
-          rgba(244, 203, 220, 0) 30%
-        ),
-        radial-gradient(
-          circle at 92% 15%,
-          rgba(248, 232, 168, 0.9) 0,
-          rgba(248, 232, 168, 0) 28%
-        ),
-        radial-gradient(
-          circle at 88% 90%,
-          rgba(201, 234, 220, 0.95) 0,
-          rgba(201, 234, 220, 0) 32%
-        ),
-        linear-gradient(
-          145deg,
-          #f7edff 0%,
-          #fff6fa 42%,
-          #fffbed 70%,
-          #effbf6 100%
-        );
+        radial-gradient(circle at 8% 12%, var(--bg-2), transparent 34%),
+        radial-gradient(circle at 90% 10%, var(--bg-3), transparent 28%),
+        radial-gradient(circle at 86% 88%, var(--bg-4), transparent 35%),
+        linear-gradient(145deg, var(--bg-1), var(--bg-2));
+
+      background-attachment: fixed;
+      overflow: hidden;
+      transition:
+        background 0.35s ease,
+        color 0.35s ease;
     }
 
     button,
     input,
-    textarea {
-      font-family: inherit;
+    textarea,
+    select {
+      font: inherit;
     }
 
     button {
       -webkit-tap-highlight-color: transparent;
     }
 
-    .app {
-      width: 100%;
-      max-width: 560px;
-      height: min(880px, 95vh);
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(22px);
+      opacity: 0.55;
+      pointer-events: none;
+      animation: float 9s ease-in-out infinite;
+    }
+
+    .orb.one {
+      width: 190px;
+      height: 190px;
+      top: -40px;
+      left: -35px;
+      background: #efbed3;
+    }
+
+    .orb.two {
+      width: 160px;
+      height: 160px;
+      right: -25px;
+      top: 18%;
+      background: #f6e1a6;
+      animation-delay: -2s;
+    }
+
+    .orb.three {
+      width: 210px;
+      height: 210px;
+      right: 8%;
+      bottom: -80px;
+      background: #bfe5d6;
+      animation-delay: -4s;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translate3d(0, 0, 0);
+      }
+
+      50% {
+        transform: translate3d(0, -14px, 0);
+      }
+    }
+
+    .app-shell {
+      position: relative;
+      z-index: 2;
+
+      width: min(1180px, 100%);
+      height: min(860px, calc(100vh - 44px));
+
+      display: grid;
+      grid-template-columns: 285px 1fr;
+      overflow: hidden;
+
+      border: 1px solid var(--border);
+      border-radius: 34px;
+
+      background: var(--surface);
+      box-shadow: var(--shadow);
+
+      backdrop-filter: blur(28px) saturate(135%);
+      -webkit-backdrop-filter: blur(28px) saturate(135%);
+
+      transition:
+        background 0.35s ease,
+        border-color 0.35s ease;
+    }
+
+    .sidebar {
+      padding: 20px;
 
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      gap: 18px;
 
-      border: 1px solid rgba(255, 255, 255, 0.85);
-      border-radius: 32px;
-
-      background: rgba(255, 255, 255, 0.83);
-      box-shadow:
-        0 30px 80px var(--shadow),
-        inset 0 1px 0 rgba(255, 255, 255, 0.95);
-
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-
-    .header {
-      position: relative;
-      padding: 18px;
-
-      display: flex;
-      align-items: center;
-      gap: 14px;
-
-      color: var(--text);
-      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border-soft);
 
       background:
-        radial-gradient(
-          circle at 92% 15%,
-          rgba(248, 232, 168, 0.85),
-          transparent 32%
-        ),
-        radial-gradient(
-          circle at 10% 90%,
-          rgba(201, 234, 220, 0.8),
-          transparent 36%
-        ),
         linear-gradient(
-          135deg,
-          #e8d6f6 0%,
-          #f7ddea 48%,
-          #fff1bd 100%
+          180deg,
+          rgba(255, 255, 255, 0.3),
+          rgba(255, 255, 255, 0.1)
         );
     }
 
+    .brand-area {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
     .logo {
-      width: 68px;
-      height: 68px;
-      flex: 0 0 68px;
+      width: 58px;
+      height: 58px;
+      flex-shrink: 0;
 
       display: grid;
       place-items: center;
-      overflow: hidden;
 
-      border: 2px solid rgba(255, 255, 255, 0.95);
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.87);
+      border: 1px solid var(--border);
+      border-radius: 20px;
 
-      box-shadow: 0 10px 25px rgba(98, 67, 116, 0.18);
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.86),
+          rgba(255, 255, 255, 0.28)
+        );
+
+      box-shadow:
+        0 12px 24px rgba(90, 61, 107, 0.13),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+      font-size: 31px;
     }
 
-    .logo svg {
-      width: 62px;
-      height: 62px;
-      display: block;
-    }
-
-    .brand {
-      min-width: 0;
-      flex: 1;
-    }
-
-    .brand h1 {
+    .brand-text h1 {
       margin: 0;
 
-      font-family: "Cormorant Garamond", Georgia, serif;
-      font-size: 34px;
-      line-height: 0.95;
-      letter-spacing: 0.4px;
-      color: #644879;
+      color: var(--accent-dark);
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 30px;
+      letter-spacing: -0.8px;
     }
 
-    .brand p {
-      margin: 7px 0 0;
-      font-size: 12.5px;
-      font-weight: 700;
-      color: #725f7c;
+    .brand-text p {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 650;
     }
 
-    .online {
+    .new-chat {
+      width: 100%;
+      min-height: 48px;
+
       display: flex;
       align-items: center;
-      gap: 6px;
-
-      padding: 7px 9px;
-      border: 1px solid rgba(101, 145, 125, 0.16);
-      border-radius: 999px;
-
-      background: rgba(239, 251, 246, 0.86);
-      color: #527863;
-
-      font-size: 11px;
-      font-weight: 800;
-    }
-
-    .online-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #72c69e;
-      box-shadow: 0 0 0 4px rgba(114, 198, 158, 0.16);
-    }
-
-    .main-tabs {
-      padding: 10px 12px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      justify-content: center;
       gap: 8px;
 
-      background: rgba(255, 255, 255, 0.85);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .main-tab {
-      min-height: 42px;
       border: 1px solid var(--border);
-      border-radius: 15px;
+      border-radius: 17px;
 
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.9);
+      color: #fff;
 
-      font-size: 14px;
+      background:
+        linear-gradient(
+          135deg,
+          #9a74b7,
+          #cf8baa
+        );
+
+      box-shadow: 0 12px 24px rgba(108, 74, 126, 0.18);
+
+      font-size: 13px;
       font-weight: 800;
       cursor: pointer;
 
       transition:
-        transform 0.15s ease,
-        background 0.2s ease,
+        transform 0.2s ease,
         box-shadow 0.2s ease;
     }
 
-    .main-tab.active {
-      color: #604276;
-      border-color: rgba(155, 119, 186, 0.26);
-      background: linear-gradient(
-        135deg,
-        var(--lilac-light),
-        var(--pink-light)
-      );
-      box-shadow: 0 7px 18px rgba(118, 83, 138, 0.12);
+    .new-chat:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 15px 30px rgba(108, 74, 126, 0.23);
     }
 
-    .main-tab:active {
-      transform: scale(0.98);
+    .menu {
+      display: grid;
+      gap: 7px;
+    }
+
+    .menu-button {
+      width: 100%;
+      min-height: 45px;
+      padding: 0 13px;
+
+      display: flex;
+      align-items: center;
+      gap: 11px;
+
+      border: 1px solid transparent;
+      border-radius: 15px;
+
+      color: var(--muted);
+      background: transparent;
+
+      text-align: left;
+      font-size: 13px;
+      font-weight: 720;
+      cursor: pointer;
+
+      transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .menu-button:hover {
+      background: var(--surface-soft);
+      color: var(--text);
+      transform: translateX(2px);
+    }
+
+    .menu-button.active {
+      border-color: var(--border-soft);
+      color: var(--accent-dark);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(224, 205, 239, 0.72),
+          rgba(245, 213, 228, 0.62)
+        );
+
+      box-shadow: 0 10px 22px rgba(91, 63, 108, 0.09);
+    }
+
+    body.dark .menu-button.active {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(132, 92, 160, 0.3),
+          rgba(169, 91, 130, 0.22)
+        );
+    }
+
+    .menu-icon {
+      width: 25px;
+      text-align: center;
+      font-size: 17px;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      display: grid;
+      gap: 9px;
+    }
+
+    .mini-card {
+      padding: 13px;
+
+      border: 1px solid var(--border-soft);
+      border-radius: 17px;
+
+      background: var(--surface-soft);
+
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .main {
+      min-width: 0;
+      min-height: 0;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      min-height: 83px;
+      padding: 16px 20px;
+
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      border-bottom: 1px solid var(--border-soft);
+
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .mobile-menu {
+      display: none;
+    }
+
+    .top-title {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .top-title h2 {
+      margin: 0;
+      color: var(--accent-dark);
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+      font-size: 24px;
+    }
+
+    .top-title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 620;
+    }
+
+    .status {
+      padding: 8px 11px;
+
+      border: 1px solid rgba(96, 151, 124, 0.18);
+      border-radius: 999px;
+
+      color: #557c69;
+      background: rgba(220, 246, 233, 0.68);
+
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    body.dark .status {
+      color: #bfe8d1;
+      background: rgba(92, 151, 121, 0.16);
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .glass-control {
+      min-height: 42px;
+
+      border: 1px solid var(--border);
+      border-radius: 14px;
+
+      color: var(--text);
+      background: var(--surface-soft);
+
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.36);
+
+      cursor: pointer;
+    }
+
+    .language-wrap {
+      position: relative;
+    }
+
+    .language-button {
+      padding: 0 12px;
+
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .language-menu {
+      position: absolute;
+      z-index: 20;
+
+      top: calc(100% + 9px);
+      right: 0;
+
+      width: 210px;
+      max-height: 340px;
+      padding: 8px;
+
+      display: none;
+      overflow-y: auto;
+
+      border: 1px solid var(--border);
+      border-radius: 18px;
+
+      background: var(--surface-strong);
+
+      box-shadow: 0 22px 50px rgba(65, 45, 77, 0.22);
+
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+
+    .language-menu.open {
+      display: block;
+      animation: menuIn 0.18s ease;
+    }
+
+    @keyframes menuIn {
+      from {
+        opacity: 0;
+        transform: translateY(-5px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .language-option {
+      width: 100%;
+      min-height: 39px;
+      padding: 0 10px;
+
+      display: flex;
+      align-items: center;
+      gap: 9px;
+
+      border: 0;
+      border-radius: 11px;
+
+      color: var(--text);
+      background: transparent;
+
+      text-align: left;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .language-option:hover {
+      background: var(--surface-soft);
+    }
+
+    .theme-button {
+      width: 42px;
+      padding: 0;
+      font-size: 17px;
+    }
+
+    .workspace {
+      min-height: 0;
+      flex: 1;
+
+      display: flex;
+      flex-direction: column;
     }
 
     .panel {
       min-height: 0;
       flex: 1;
+
       display: none;
       flex-direction: column;
     }
@@ -267,973 +568,1685 @@
       display: flex;
     }
 
-    .modes {
-      padding: 11px 12px;
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-
-      border-bottom: 1px solid var(--border);
-      background: rgba(255, 250, 244, 0.74);
-
-      scrollbar-width: none;
-    }
-
-    .modes::-webkit-scrollbar {
-      display: none;
-    }
-
-    .mode {
-      flex: 0 0 auto;
-      padding: 8px 12px;
-
-      border: 1px solid var(--border);
-      border-radius: 999px;
-
-      color: #675773;
-      background: rgba(255, 255, 255, 0.9);
-
-      font-size: 12px;
-      font-weight: 800;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .mode.active {
-      color: #ffffff;
-      border-color: transparent;
-      background: linear-gradient(
-        135deg,
-        #a984ca,
-        #d39cba
-      );
-      box-shadow: 0 7px 16px rgba(124, 83, 143, 0.17);
-    }
-
-    #chat {
+    .chat-content {
       min-height: 0;
       flex: 1;
 
-      padding: 17px 14px;
+      padding: 24px;
+      overflow-y: auto;
+
+      scroll-behavior: smooth;
+    }
+
+    .welcome {
+      max-width: 670px;
+      margin: 8px auto 24px;
+      text-align: center;
+    }
+
+    .welcome-bloom {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 13px;
+
+      display: grid;
+      place-items: center;
+
+      border: 1px solid var(--border);
+      border-radius: 26px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.8),
+          rgba(255, 255, 255, 0.24)
+        );
+
+      box-shadow:
+        0 16px 34px rgba(81, 57, 97, 0.13),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+      font-size: 39px;
+    }
+
+    .welcome h3 {
+      margin: 0;
+      color: var(--accent-dark);
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+      font-size: clamp(31px, 5vw, 49px);
+      letter-spacing: -1.5px;
+    }
+
+    .welcome p {
+      max-width: 550px;
+      margin: 10px auto 0;
+
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .suggestions {
+      max-width: 760px;
+      margin: 0 auto 22px;
+
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .suggestion {
+      min-height: 96px;
+      padding: 13px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      border: 1px solid var(--border-soft);
+      border-radius: 19px;
+
+      color: var(--text);
+      background: var(--surface-soft);
+
+      text-align: left;
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .suggestion:hover {
+      transform: translateY(-2px);
+      background: var(--surface-strong);
+    }
+
+    .suggestion span {
+      font-size: 21px;
+    }
+
+    .suggestion strong {
+      font-size: 12px;
+    }
+
+    .messages {
+      max-width: 790px;
+      margin: 0 auto;
+
       display: flex;
       flex-direction: column;
       gap: 12px;
-      overflow-y: auto;
+    }
 
-      background:
-        radial-gradient(
-          circle at 5% 10%,
-          rgba(238, 227, 248, 0.75),
-          transparent 32%
-        ),
-        radial-gradient(
-          circle at 95% 75%,
-          rgba(201, 234, 220, 0.48),
-          transparent 30%
-        ),
-        rgba(255, 255, 255, 0.42);
+    .message-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 9px;
+    }
+
+    .message-row.user-row {
+      justify-content: flex-end;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+
+      display: grid;
+      place-items: center;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      background: var(--surface-strong);
+
+      font-size: 16px;
     }
 
     .message {
-      max-width: 84%;
+      max-width: 76%;
       padding: 12px 14px;
 
-      border: 1px solid rgba(98, 71, 115, 0.08);
+      border: 1px solid var(--border-soft);
       border-radius: 19px;
 
-      font-size: 14.5px;
-      line-height: 1.48;
-      white-space: pre-wrap;
+      font-size: 13px;
+      line-height: 1.55;
 
-      box-shadow: 0 7px 18px rgba(91, 61, 108, 0.07);
-      animation: rise 0.22s ease;
+      box-shadow: 0 8px 20px rgba(75, 51, 89, 0.08);
     }
 
-    .bot {
-      align-self: flex-start;
-      color: #4f4058;
+    .message.mimi {
       border-bottom-left-radius: 6px;
 
-      background: linear-gradient(
-        135deg,
-        #f1e6fa,
-        #fff0f6
-      );
+      background:
+        linear-gradient(
+          135deg,
+          rgba(232, 216, 244, 0.74),
+          rgba(249, 221, 234, 0.64)
+        );
     }
 
-    .user {
-      align-self: flex-end;
-      color: #ffffff;
+    body.dark .message.mimi {
+      background:
+        linear-gradient(
+          135deg,
+          rgba(112, 78, 137, 0.24),
+          rgba(151, 75, 111, 0.17)
+        );
+    }
+
+    .message.user {
       border-bottom-right-radius: 6px;
 
-      background: linear-gradient(
-        135deg,
-        #9d79bd,
-        #d28faf
-      );
+      color: #fff;
+
+      background:
+        linear-gradient(
+          135deg,
+          #9570b5,
+          #cd88a7
+        );
     }
 
-    .typing {
-      font-style: italic;
-      opacity: 0.68;
+    .composer-wrap {
+      padding: 14px 20px 18px;
+
+      border-top: 1px solid var(--border-soft);
+
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .composer {
-      padding: 11px;
+      max-width: 820px;
+      margin: auto;
+      padding: 8px;
+
       display: flex;
+      align-items: flex-end;
       gap: 8px;
 
-      border-top: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 21px;
+
+      background: var(--surface-strong);
+
+      box-shadow:
+        0 16px 35px rgba(70, 48, 82, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .composer-button {
+      width: 43px;
+      height: 43px;
+      flex-shrink: 0;
+
+      border: 1px solid var(--border-soft);
+      border-radius: 14px;
+
+      color: var(--text);
+      background: var(--surface-soft);
+
+      font-size: 17px;
+      cursor: pointer;
     }
 
     #messageInput {
       min-width: 0;
+      max-height: 130px;
       flex: 1;
-      padding: 13px 14px;
 
-      border: 1px solid rgba(113, 79, 132, 0.18);
-      border-radius: 17px;
+      padding: 11px 6px;
+
+      resize: none;
+
+      border: none;
       outline: none;
 
       color: var(--text);
-      background: #fffdfd;
+      background: transparent;
 
-      font-size: 15px;
-    }
-
-    #messageInput:focus {
-      border-color: #b394cc;
-      box-shadow: 0 0 0 4px rgba(185, 155, 217, 0.15);
-    }
-
-    .send-button {
-      min-width: 84px;
-      padding: 0 15px;
-
-      border: none;
-      border-radius: 16px;
-
-      color: #ffffff;
-      background: linear-gradient(
-        135deg,
-        #9873b9,
-        #d28faf
-      );
-
-      font-size: 13px;
-      font-weight: 900;
-      cursor: pointer;
-
-      box-shadow: 0 8px 18px rgba(121, 81, 140, 0.18);
-    }
-
-    .send-button:active {
-      transform: scale(0.97);
-    }
-
-    .image-panel-content {
-      min-height: 0;
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-
-      background:
-        radial-gradient(
-          circle at 10% 12%,
-          rgba(244, 203, 220, 0.6),
-          transparent 32%
-        ),
-        radial-gradient(
-          circle at 90% 15%,
-          rgba(248, 232, 168, 0.65),
-          transparent 30%
-        ),
-        radial-gradient(
-          circle at 75% 95%,
-          rgba(201, 234, 220, 0.65),
-          transparent 32%
-        ),
-        rgba(255, 255, 255, 0.5);
-    }
-
-    .image-title {
-      margin: 0;
-
-      font-family: "Cormorant Garamond", Georgia, serif;
-      font-size: 29px;
-      color: #674b78;
-    }
-
-    .image-description {
-      margin: 5px 0 15px;
-      color: var(--muted);
       font-size: 13px;
       line-height: 1.45;
     }
 
-    .prompt-label {
-      display: block;
-      margin-bottom: 7px;
+    #messageInput::placeholder,
+    #imagePrompt::placeholder {
+      color: var(--muted);
+    }
 
-      color: #604e6a;
-      font-size: 13px;
-      font-weight: 900;
+    .send-button {
+      min-width: 74px;
+      height: 43px;
+
+      border: none;
+      border-radius: 14px;
+
+      color: #fff;
+
+      background:
+        linear-gradient(
+          135deg,
+          #936db3,
+          #cf89a8
+        );
+
+      font-size: 12px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .composer-note {
+      margin: 7px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 9px;
+    }
+
+    .studio-content {
+      min-height: 0;
+      flex: 1;
+
+      padding: 25px;
+      overflow-y: auto;
+    }
+
+    .studio-grid {
+      max-width: 910px;
+      margin: auto;
+
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 17px;
+    }
+
+    .studio-card {
+      padding: 20px;
+
+      border: 1px solid var(--border);
+      border-radius: 25px;
+
+      background: var(--surface-soft);
+
+      box-shadow: 0 15px 34px rgba(75, 51, 88, 0.09);
+    }
+
+    .studio-card h3 {
+      margin: 0 0 7px;
+      color: var(--accent-dark);
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+      font-size: 26px;
+    }
+
+    .studio-card p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
     }
 
     #imagePrompt {
       width: 100%;
-      min-height: 90px;
+      min-height: 145px;
+      padding: 14px;
+
       resize: vertical;
 
-      padding: 13px 14px;
-      border: 1px solid rgba(111, 77, 130, 0.17);
+      border: 1px solid var(--border);
       border-radius: 17px;
       outline: none;
 
       color: var(--text);
-      background: rgba(255, 255, 255, 0.9);
+      background: var(--surface-strong);
 
-      font-size: 14px;
-      line-height: 1.45;
+      font-size: 13px;
+      line-height: 1.5;
     }
 
-    #imagePrompt:focus {
-      border-color: #b394cc;
-      box-shadow: 0 0 0 4px rgba(185, 155, 217, 0.14);
+    .style-chips {
+      margin-top: 11px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
     }
 
-    .style-options {
-      margin: 12px 0;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-    }
+    .style-chip {
+      padding: 8px 10px;
 
-    .style-option {
-      padding: 10px 8px;
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
 
-      border: 1px solid var(--border);
-      border-radius: 14px;
+      color: var(--muted);
+      background: var(--surface-soft);
 
-      color: #6d5a77;
-      background: rgba(255, 255, 255, 0.88);
-
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 10px;
+      font-weight: 730;
       cursor: pointer;
     }
 
-    .style-option.active {
-      color: #604276;
-      border-color: rgba(163, 124, 194, 0.25);
-      background: linear-gradient(
-        135deg,
-        var(--lilac-light),
-        var(--pink-light)
-      );
+    .style-chip.selected {
+      color: var(--accent-dark);
+      background: rgba(226, 207, 240, 0.55);
     }
 
     .generate-button {
       width: 100%;
       min-height: 48px;
+      margin-top: 13px;
 
       border: none;
-      border-radius: 17px;
+      border-radius: 16px;
 
-      color: #594467;
-      background: linear-gradient(
-        135deg,
-        #e0c8ef,
-        #f4cbdc 45%,
-        #f8e8a8 72%,
-        #c9eadc
-      );
+      color: #654d72;
 
-      font-size: 14px;
+      background:
+        linear-gradient(
+          135deg,
+          #c5a9dc,
+          #efbed2,
+          #f4dfa5,
+          #bee4d4
+        );
+
+      font-size: 12px;
       font-weight: 900;
       cursor: pointer;
-
-      box-shadow: 0 10px 22px rgba(107, 73, 126, 0.14);
     }
 
-    .generate-button:active {
-      transform: scale(0.985);
-    }
-
-    .image-result {
-      margin-top: 14px;
-      padding: 10px;
-
-      border: 1px solid rgba(106, 77, 122, 0.13);
-      border-radius: 22px;
-
-      background: rgba(255, 255, 255, 0.74);
-      box-shadow: 0 14px 30px rgba(88, 58, 104, 0.09);
-    }
-
-    .image-canvas {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      overflow: hidden;
+    .preview {
+      min-height: 410px;
+      padding: 20px;
 
       display: grid;
       place-items: center;
 
-      border-radius: 17px;
+      border: 1px solid var(--border);
+      border-radius: 25px;
+
       background:
-        radial-gradient(
-          circle at 20% 20%,
-          rgba(244, 203, 220, 0.96),
-          transparent 33%
-        ),
-        radial-gradient(
-          circle at 80% 18%,
-          rgba(248, 232, 168, 0.95),
-          transparent 32%
-        ),
-        radial-gradient(
-          circle at 78% 82%,
-          rgba(201, 234, 220, 0.98),
-          transparent 36%
-        ),
-        linear-gradient(
-          145deg,
-          #dbc6ed,
-          #fff0f6 45%,
-          #fff9dc 75%,
-          #effbf6
-        );
+        radial-gradient(circle at 15% 18%, #f2bfd5, transparent 34%),
+        radial-gradient(circle at 82% 16%, #f2dfa4, transparent 30%),
+        radial-gradient(circle at 80% 82%, #bee5d6, transparent 35%),
+        linear-gradient(145deg, #d9c3ec, #f6e8f1);
+
+      box-shadow: 0 15px 34px rgba(75, 51, 88, 0.09);
     }
 
-    .decorative-flower {
-      position: absolute;
-      font-size: 46px;
-      filter: saturate(0.78);
-      opacity: 0.75;
-    }
+    .preview-card {
+      width: min(330px, 100%);
+      padding: 25px;
 
-    .flower-one {
-      top: 10%;
-      left: 9%;
-      transform: rotate(-14deg);
-    }
-
-    .flower-two {
-      right: 8%;
-      bottom: 9%;
-      transform: rotate(14deg);
-    }
-
-    .preview-text {
-      position: relative;
-      z-index: 2;
-
-      max-width: 82%;
-      padding: 17px;
-
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 24px;
 
       text-align: center;
-      color: #654a75;
-      background: rgba(255, 255, 255, 0.68);
 
-      box-shadow: 0 12px 28px rgba(86, 56, 102, 0.12);
-      backdrop-filter: blur(10px);
+      color: #695474;
+      background: rgba(255, 255, 255, 0.45);
+
+      box-shadow: 0 20px 45px rgba(94, 66, 110, 0.15);
+
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
 
-    .preview-text strong {
+    .preview-card .flower {
+      margin-bottom: 11px;
+      font-size: 44px;
+    }
+
+    .preview-card strong {
       display: block;
-      margin-bottom: 6px;
-
-      font-family: "Cormorant Garamond", Georgia, serif;
-      font-size: 27px;
+      margin-bottom: 7px;
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+      font-size: 25px;
     }
 
-    .preview-text span {
+    .preview-card span {
       font-size: 12px;
-      line-height: 1.45;
+      line-height: 1.5;
     }
 
-    .image-note {
-      margin: 9px 3px 1px;
+    .empty-panel {
+      flex: 1;
+      padding: 25px;
+
+      display: grid;
+      place-items: center;
+    }
+
+    .empty-card {
+      max-width: 520px;
+      padding: 32px;
+
+      border: 1px solid var(--border);
+      border-radius: 26px;
+
+      text-align: center;
+
+      background: var(--surface-soft);
+
+      box-shadow: 0 15px 34px rgba(75, 51, 88, 0.09);
+    }
+
+    .empty-card span {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 40px;
+    }
+
+    .empty-card h3 {
+      margin: 0 0 8px;
+      color: var(--accent-dark);
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+      font-size: 28px;
+    }
+
+    .empty-card p {
+      margin: 0;
       color: var(--muted);
-      font-size: 11px;
-      text-align: center;
+      font-size: 12px;
+      line-height: 1.6;
     }
 
-    .footer {
-      padding: 7px 10px 9px;
-      text-align: center;
-
-      color: #95859c;
-      background: rgba(255, 255, 255, 0.9);
-
-      font-size: 10.5px;
+    .mobile-overlay {
+      display: none;
     }
 
-    @keyframes rise {
-      from {
-        opacity: 0;
-        transform: translateY(6px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 430px) {
+    @media (max-width: 900px) {
       body {
         padding: 0;
+        overflow: hidden;
       }
 
-      .app {
+      .app-shell {
         height: 100vh;
-        max-height: none;
-        border: none;
+        border: 0;
         border-radius: 0;
+        grid-template-columns: 1fr;
       }
 
-      .online {
+      .sidebar {
+        position: fixed;
+        z-index: 40;
+
+        top: 0;
+        bottom: 0;
+        left: 0;
+
+        width: min(290px, 86vw);
+
+        transform: translateX(-105%);
+        transition: transform 0.25s ease;
+
+        border-right: 1px solid var(--border);
+
+        background: var(--surface-strong);
+
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .mobile-overlay {
+        position: fixed;
+        z-index: 35;
+        inset: 0;
+
         display: none;
+
+        background: rgba(31, 24, 36, 0.28);
+        backdrop-filter: blur(3px);
+      }
+
+      .mobile-overlay.open {
+        display: block;
+      }
+
+      .mobile-menu {
+        width: 42px;
+        height: 42px;
+        padding: 0;
+
+        display: grid;
+        place-items: center;
+
+        border: 1px solid var(--border);
+        border-radius: 14px;
+
+        color: var(--text);
+        background: var(--surface-soft);
+
+        cursor: pointer;
+      }
+
+      .status {
+        display: none;
+      }
+
+      .suggestions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .studio-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        min-height: 74px;
+        padding: 12px;
+      }
+
+      .top-title h2 {
+        font-size: 20px;
+      }
+
+      .top-title p {
+        display: none;
+      }
+
+      .language-button {
+        width: 42px;
+        padding: 0;
+        justify-content: center;
+      }
+
+      .language-label {
+        display: none;
+      }
+
+      .chat-content {
+        padding: 18px 12px;
+      }
+
+      .welcome {
+        margin-top: 4px;
+      }
+
+      .welcome-bloom {
+        width: 65px;
+        height: 65px;
+        border-radius: 22px;
+        font-size: 33px;
+      }
+
+      .welcome h3 {
+        font-size: 35px;
+      }
+
+      .welcome p {
+        font-size: 12px;
+      }
+
+      .suggestions {
+        gap: 8px;
+      }
+
+      .suggestion {
+        min-height: 84px;
+      }
+
+      .message {
+        max-width: 86%;
+      }
+
+      .composer-wrap {
+        padding: 10px;
+      }
+
+      .composer-button.voice-button {
+        display: none;
+      }
+
+      .studio-content {
+        padding: 14px;
+      }
+
+      .preview {
+        min-height: 330px;
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="app">
-    <header class="header">
-      <div class="logo" aria-label="MiMiAi çiçekli logosu">
-        <svg
-          viewBox="0 0 100 100"
-          role="img"
-          aria-label="Pastel çiçekli MiMiAi logosu"
-        >
-          <defs>
-            <linearGradient
-              id="mGradient"
-              x1="0"
-              y1="0"
-              x2="1"
-              y2="1"
-            >
-              <stop offset="0%" stop-color="#765392"></stop>
-              <stop offset="100%" stop-color="#bd8eb1"></stop>
-            </linearGradient>
-          </defs>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+  <div class="orb three"></div>
 
-          <circle
-            cx="50"
-            cy="50"
-            r="47"
-            fill="#fffafd"
-            stroke="#dac5e8"
-            stroke-width="2"
-          ></circle>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
 
-          <path
-            d="M23 72 V31 L49 62 L76 31 V72"
-            fill="none"
-            stroke="url(#mGradient)"
-            stroke-width="7"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          ></path>
+  <main class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-area">
+        <div class="logo">🌸</div>
 
-          <path
-            d="M20 65 C16 51 19 38 31 27"
-            fill="none"
-            stroke="#8c6baa"
-            stroke-width="2.4"
-            stroke-linecap="round"
-          ></path>
-
-          <ellipse
-            cx="20"
-            cy="57"
-            rx="5"
-            ry="9"
-            transform="rotate(-32 20 57)"
-            fill="#c9eadc"
-          ></ellipse>
-
-          <ellipse
-            cx="21"
-            cy="43"
-            rx="5"
-            ry="9"
-            transform="rotate(32 21 43)"
-            fill="#f4cbdc"
-          ></ellipse>
-
-          <ellipse
-            cx="30"
-            cy="31"
-            rx="5"
-            ry="9"
-            transform="rotate(52 30 31)"
-            fill="#f8e8a8"
-          ></ellipse>
-
-          <circle
-            cx="28"
-            cy="47"
-            r="6"
-            fill="#dfc8ec"
-          ></circle>
-
-          <circle
-            cx="28"
-            cy="47"
-            r="2"
-            fill="#7e5b99"
-          ></circle>
-
-          <path
-            d="M77 21 L80 29 L88 32 L80 35 L77 43 L74 35 L66 32 L74 29 Z"
-            fill="#b184c7"
-          ></path>
-        </svg>
-      </div>
-
-      <div class="brand">
-        <h1>MiMiAi</h1>
-        <p>Nazik, enerjik ve dürüst AI arkadaşın</p>
-      </div>
-
-      <div class="online">
-        <span class="online-dot"></span>
-        Çevrimiçi
-      </div>
-    </header>
-
-    <div class="main-tabs">
-      <button
-        id="chatTab"
-        class="main-tab active"
-        type="button"
-      >
-        💬 MiMi ile Konuş
-      </button>
-
-      <button
-        id="imageTab"
-        class="main-tab"
-        type="button"
-      >
-        🎨 Resim Tasarla
-      </button>
-    </div>
-
-    <section
-      id="chatPanel"
-      class="panel active"
-    >
-      <nav class="modes" aria-label="MiMiAi modları">
-        <button
-          class="mode active"
-          data-mode="normal"
-          type="button"
-        >
-          💜 Normal
-        </button>
-
-        <button
-          class="mode"
-          data-mode="teacher"
-          type="button"
-        >
-          📚 Öğretmen
-        </button>
-
-        <button
-          class="mode"
-          data-mode="chef"
-          type="button"
-        >
-          🍝 Şef MiMi
-        </button>
-
-        <button
-          class="mode"
-          data-mode="fun"
-          type="button"
-        >
-          🎮 Eğlence
-        </button>
-
-        <button
-          class="mode"
-          data-mode="research"
-          type="button"
-        >
-          🔎 Araştırma
-        </button>
-      </nav>
-
-      <div id="chat" aria-live="polite">
-        <div class="message bot">Merhaba! Ben MiMiAi 🌸
-
-Bugün sohbet edebilir, yemek tarifi düşünebilir, ders çalışabilir veya birlikte eğlenebiliriz.</div>
-      </div>
-
-      <div class="composer">
-        <input
-          id="messageInput"
-          type="text"
-          placeholder="MiMiAi'ye bir şey yaz..."
-          autocomplete="off"
-          aria-label="Mesaj yaz"
-        >
-
-        <button
-          id="sendButton"
-          class="send-button"
-          type="button"
-        >
-          Gönder
-        </button>
-      </div>
-    </section>
-
-    <section
-      id="imagePanel"
-      class="panel"
-    >
-      <div class="image-panel-content">
-        <h2 class="image-title">Hayalindeki resmi tasarla</h2>
-
-        <p class="image-description">
-          Görmek istediğin resmi ayrıntılı şekilde tarif et. MiMiAi
-          seçtiğin stile uygun pastel bir taslak hazırlasın.
-        </p>
-
-        <label
-          class="prompt-label"
-          for="imagePrompt"
-        >
-          Resimde neler olsun?
-        </label>
-
-        <textarea
-          id="imagePrompt"
-          placeholder="Örnek: Lila elbiseli bir kız, çiçekli bir bahçede, pastel ve masalsı tarzda..."
-        ></textarea>
-
-        <div class="style-options">
-          <button
-            class="style-option active"
-            data-style="Pastel ve masalsı"
-            type="button"
-          >
-            🌸 Pastel
-          </button>
-
-          <button
-            class="style-option"
-            data-style="Gerçekçi ve zarif"
-            type="button"
-          >
-            📷 Gerçekçi
-          </button>
-
-          <button
-            class="style-option"
-            data-style="Sevimli çizgi film"
-            type="button"
-          >
-            🧸 Çizgi film
-          </button>
-
-          <button
-            class="style-option"
-            data-style="Zarif suluboya"
-            type="button"
-          >
-            🎨 Suluboya
-          </button>
-        </div>
-
-        <button
-          id="generateButton"
-          class="generate-button"
-          type="button"
-        >
-          ✨ Resmi Tasarla
-        </button>
-
-        <div class="image-result">
-          <div
-            id="imageCanvas"
-            class="image-canvas"
-            role="img"
-            aria-label="Pastel görsel taslağı"
-          >
-            <span class="decorative-flower flower-one">🌸</span>
-            <span class="decorative-flower flower-two">🌿</span>
-
-            <div class="preview-text">
-              <strong>MiMiAi Studio</strong>
-              <span id="previewDescription">
-                Açıklamanı yaz ve “Resmi Tasarla” düğmesine bas.
-              </span>
-            </div>
-          </div>
-
-          <p class="image-note">
-            Bu sürüm pastel bir ön izleme üretir. Gerçek AI resim üretimi,
-            güvenli yapay zekâ bağlantısı eklendiğinde çalışacaktır.
+        <div class="brand-text">
+          <h1>MiMiAi</h1>
+          <p data-i18n="brandSubtitle">
+            Nazik, yaratıcı ve dürüst
           </p>
         </div>
       </div>
-    </section>
 
-    <footer class="footer">
-      MiMiAi • Pastel başlangıç sürümü
-    </footer>
+      <button class="new-chat" id="newChatButton" type="button">
+        <span>＋</span>
+        <span data-i18n="newChat">Yeni sohbet</span>
+      </button>
+
+      <nav class="menu">
+        <button
+          class="menu-button active"
+          data-panel="chatPanel"
+          data-title-key="chatTitle"
+          data-subtitle-key="chatSubtitle"
+          type="button"
+        >
+          <span class="menu-icon">💬</span>
+          <span data-i18n="chat">Sohbet</span>
+        </button>
+
+        <button
+          class="menu-button"
+          data-panel="studioPanel"
+          data-title-key="studioTitle"
+          data-subtitle-key="studioSubtitle"
+          type="button"
+        >
+          <span class="menu-icon">🎨</span>
+          <span data-i18n="imageStudio">Resim stüdyosu</span>
+        </button>
+
+        <button
+          class="menu-button"
+          data-panel="memoryPanel"
+          data-title-key="memoryTitle"
+          data-subtitle-key="memorySubtitle"
+          type="button"
+        >
+          <span class="menu-icon">🧠</span>
+          <span data-i18n="memory">Hafıza</span>
+        </button>
+
+        <button
+          class="menu-button"
+          data-panel="historyPanel"
+          data-title-key="historyTitle"
+          data-subtitle-key="historySubtitle"
+          type="button"
+        >
+          <span class="menu-icon">🕊️</span>
+          <span data-i18n="history">Geçmiş sohbetler</span>
+        </button>
+
+        <button
+          class="menu-button"
+          data-panel="filesPanel"
+          data-title-key="filesTitle"
+          data-subtitle-key="filesSubtitle"
+          type="button"
+        >
+          <span class="menu-icon">📄</span>
+          <span data-i18n="files">Dosyalar ve PDF</span>
+        </button>
+
+        <button
+          class="menu-button"
+          data-panel="favoritesPanel"
+          data-title-key="favoritesTitle"
+          data-subtitle-key="favoritesSubtitle"
+          type="button"
+        >
+          <span class="menu-icon">♡</span>
+          <span data-i18n="favorites">Favoriler</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="mini-card">
+          <strong data-i18n="mimiMode">MiMiAi modu</strong>
+          <span data-i18n="mimiModeText">
+            Sevecen, dürüst ve yaratıcı cevaplar.
+          </span>
+        </div>
+
+        <button
+          class="menu-button"
+          data-panel="settingsPanel"
+          data-title-key="settingsTitle"
+          data-subtitle-key="settingsSubtitle"
+          type="button"
+        >
+          <span class="menu-icon">⚙️</span>
+          <span data-i18n="settings">Ayarlar</span>
+        </button>
+      </div>
+    </aside>
+
+    <section class="main">
+      <header class="topbar">
+        <button
+          class="mobile-menu"
+          id="mobileMenuButton"
+          type="button"
+          aria-label="Menü"
+        >
+          ☰
+        </button>
+
+        <div class="top-title">
+          <h2 id="pageTitle" data-i18n="chatTitle">MiMiAi ile sohbet</h2>
+
+          <p id="pageSubtitle" data-i18n="chatSubtitle">
+            Aklındaki her şeyi rahatça sorabilirsin.
+          </p>
+        </div>
+
+        <div class="status" data-i18n="online">
+          ● Çevrimiçi
+        </div>
+
+        <div class="toolbar">
+          <div class="language-wrap">
+            <button
+              class="glass-control language-button"
+              id="languageButton"
+              type="button"
+            >
+              <span>🌍</span>
+              <span class="language-label" id="languageLabel">
+                Türkçe
+              </span>
+            </button>
+
+            <div class="language-menu" id="languageMenu">
+              <button class="language-option" data-lang="tr" type="button">
+                🇹🇷 Türkçe
+              </button>
+
+              <button class="language-option" data-lang="en" type="button">
+                🇬🇧 English
+              </button>
+
+              <button class="language-option" data-lang="nl" type="button">
+                🇳🇱 Nederlands
+              </button>
+
+              <button class="language-option" data-lang="bg" type="button">
+                🇧🇬 Български
+              </button>
+
+              <button class="language-option" data-lang="ru" type="button">
+                🇷🇺 Русский
+              </button>
+
+              <button class="language-option" data-lang="el" type="button">
+                🇬🇷 Ελληνικά
+              </button>
+
+              <button class="language-option" data-lang="es" type="button">
+                🇪🇸 Español
+              </button>
+
+              <button class="language-option" data-lang="fr" type="button">
+                🇫🇷 Français
+              </button>
+
+              <button class="language-option" data-lang="it" type="button">
+                🇮🇹 Italiano
+              </button>
+
+              <button class="language-option" data-lang="de" type="button">
+                🇩🇪 Deutsch
+              </button>
+
+              <button class="language-option" data-lang="sv" type="button">
+                🇸🇪 Svenska
+              </button>
+
+              <button class="language-option" data-lang="ja" type="button">
+                🇯🇵 日本語
+              </button>
+            </div>
+          </div>
+
+          <button
+            class="glass-control theme-button"
+            id="themeButton"
+            type="button"
+            aria-label="Tema değiştir"
+          >
+            ☾
+          </button>
+        </div>
+      </header>
+
+      <div class="workspace">
+        <section class="panel active" id="chatPanel">
+          <div class="chat-content" id="chatContent">
+            <div class="welcome">
+              <div class="welcome-bloom">🌸</div>
+
+              <h3 data-i18n="welcomeTitle">
+                Merhaba, ben MiMiAi
+              </h3>
+
+              <p data-i18n="welcomeText">
+                Sorularını cevaplamak, araştırmak, fikir üretmek ve
+                sana eşlik etmek için buradayım.
+              </p>
+            </div>
+
+            <div class="suggestions">
+              <button
+                class="suggestion"
+                data-message="Bana bugün yeni bir şey öğret."
+                type="button"
+              >
+                <span>📚</span>
+                <strong data-i18n="suggestLearn">
+                  Bana bir şey öğret
+                </strong>
+              </button>
+
+              <button
+                class="suggestion"
+                data-message="Bugün için kolay bir yemek öner."
+                type="button"
+              >
+                <span>🍓</span>
+                <strong data-i18n="suggestFood">
+                  Tatlı bir tarif öner
+                </strong>
+              </button>
+
+              <button
+                class="suggestion"
+                data-message="Bir konuda detaylı araştırma yapmak istiyorum."
+                type="button"
+              >
+                <span>🔎</span>
+                <strong data-i18n="suggestResearch">
+                  Detaylı araştırma
+                </strong>
+              </button>
+
+              <button
+                class="suggestion"
+                data-message="Birlikte yaratıcı bir fikir geliştirelim."
+                type="button"
+              >
+                <span>✨</span>
+                <strong data-i18n="suggestCreate">
+                  Yaratıcı fikir üret
+                </strong>
+              </button>
+            </div>
+
+            <div class="messages" id="messages">
+              <div class="message-row">
+                <div class="avatar">🌸</div>
+
+                <div
+                  class="message mimi"
+                  data-i18n="firstMessage"
+                >
+                  Merhaba 🌸 Bugün nasıl hissediyorsun? İstersen önce
+                  biraz sohbet ederiz, sonra birlikte çözüm buluruz.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="composer-wrap">
+            <div class="composer">
+              <button
+                class="composer-button"
+                id="fileButton"
+                type="button"
+                title="Dosya ekle"
+              >
+                ＋
+              </button>
+
+              <textarea
+                id="messageInput"
+                rows="1"
+                data-placeholder-key="messagePlaceholder"
+                placeholder="MiMiAi'ye bir şey yaz..."
+              ></textarea>
+
+              <button
+                class="composer-button voice-button"
+                id="voiceButton"
+                type="button"
+                title="Ses"
+              >
+                🎙
+              </button>
+
+              <button
+                class="send-button"
+                id="sendButton"
+                type="button"
+                data-i18n="send"
+              >
+                Gönder
+              </button>
+            </div>
+
+            <p class="composer-note" data-i18n="demoNote">
+              Bu sürüm tasarım demosudur. Gerçek AI beyni sonraki
+              aşamada bağlanacaktır.
+            </p>
+          </div>
+        </section>
+
+        <section class="panel" id="studioPanel">
+          <div class="studio-content">
+            <div class="studio-grid">
+              <div class="studio-card">
+                <h3 data-i18n="studioHeading">
+                  Hayalindeki resmi anlat
+                </h3>
+
+                <p data-i18n="studioText">
+                  Ortamı, renkleri, kişileri, ışığı ve istediğin tarzı
+                  ayrıntılı biçimde yaz.
+                </p>
+
+                <textarea
+                  id="imagePrompt"
+                  data-placeholder-key="imagePlaceholder"
+                  placeholder="Örnek: Pastel tonlarda, çiçekli masalsı bir bahçe..."
+                ></textarea>
+
+                <div class="style-chips">
+                  <button class="style-chip selected" type="button">
+                    Aesthetic
+                  </button>
+
+                  <button class="style-chip" type="button">
+                    Watercolor
+                  </button>
+
+                  <button class="style-chip" type="button">
+                    Dreamy
+                  </button>
+
+                  <button class="style-chip" type="button">
+                    Editorial
+                  </button>
+                </div>
+
+                <button
+                  class="generate-button"
+                  id="generateButton"
+                  type="button"
+                  data-i18n="generate"
+                >
+                  ✨ Resmi tasarla
+                </button>
+              </div>
+
+              <div class="preview">
+                <div class="preview-card">
+                  <div class="flower">🌷</div>
+
+                  <strong>MiMiAi Studio</strong>
+
+                  <span
+                    id="previewText"
+                    data-i18n="previewText"
+                  >
+                    Tasarım açıklaman burada zarif bir önizlemeye
+                    dönüşecek.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="memoryPanel">
+          <div class="empty-panel">
+            <div class="empty-card">
+              <span>🧠</span>
+              <h3 data-i18n="memoryTitle">Hafıza</h3>
+              <p data-i18n="memoryEmpty">
+                MiMiAi ileride tercihlerini ve izin verdiğin önemli
+                ayrıntıları burada hatırlayacak.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="historyPanel">
+          <div class="empty-panel">
+            <div class="empty-card">
+              <span>🕊️</span>
+              <h3 data-i18n="historyTitle">Geçmiş sohbetler</h3>
+              <p data-i18n="historyEmpty">
+                Önceki konuşmaların burada zarif ve düzenli şekilde
+                listelenecek.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="filesPanel">
+          <div class="empty-panel">
+            <div class="empty-card">
+              <span>📄</span>
+              <h3 data-i18n="filesTitle">Dosyalar ve PDF</h3>
+              <p data-i18n="filesEmpty">
+                PDF, fotoğraf ve belgeleri MiMiAi'ye bu bölümden
+                yükleyebileceksin.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="favoritesPanel">
+          <div class="empty-panel">
+            <div class="empty-card">
+              <span>♡</span>
+              <h3 data-i18n="favoritesTitle">Favoriler</h3>
+              <p data-i18n="favoritesEmpty">
+                Beğendiğin cevapları, fikirleri ve görselleri burada
+                saklayabileceksin.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="settingsPanel">
+          <div class="empty-panel">
+            <div class="empty-card">
+              <span>⚙️</span>
+              <h3 data-i18n="settingsTitle">Ayarlar</h3>
+              <p data-i18n="settingsEmpty">
+                Dil, görünüm, hafıza ve kişilik ayarlarını buradan
+                yönetebileceksin.
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
   </main>
 
   <script>
-    const chatTab = document.getElementById("chatTab");
-    const imageTab = document.getElementById("imageTab");
+    const translations = {
+      tr: {
+        languageName: "Türkçe",
+        brandSubtitle: "Nazik, yaratıcı ve dürüst",
+        newChat: "Yeni sohbet",
+        chat: "Sohbet",
+        imageStudio: "Resim stüdyosu",
+        memory: "Hafıza",
+        history: "Geçmiş sohbetler",
+        files: "Dosyalar ve PDF",
+        favorites: "Favoriler",
+        settings: "Ayarlar",
+        mimiMode: "MiMiAi modu",
+        mimiModeText: "Sevecen, dürüst ve yaratıcı cevaplar.",
+        chatTitle: "MiMiAi ile sohbet",
+        chatSubtitle: "Aklındaki her şeyi rahatça sorabilirsin.",
+        studioTitle: "MiMiAi Resim Stüdyosu",
+        studioSubtitle: "Hayallerini estetik görsellere dönüştür.",
+        memoryTitle: "Hafıza",
+        memorySubtitle: "MiMiAi'nin hatırladığı ayrıntıları yönet.",
+        historyTitle: "Geçmiş sohbetler",
+        historySubtitle: "Önceki konuşmalarına geri dön.",
+        filesTitle: "Dosyalar ve PDF",
+        filesSubtitle: "Belgelerini yükle ve birlikte incele.",
+        favoritesTitle: "Favoriler",
+        favoritesSubtitle: "Kaydettiğin içerikleri görüntüle.",
+        settingsTitle: "Ayarlar",
+        settingsSubtitle: "MiMiAi deneyimini kişiselleştir.",
+        online: "● Çevrimiçi",
+        welcomeTitle: "Merhaba, ben MiMiAi",
+        welcomeText:
+          "Sorularını cevaplamak, araştırmak, fikir üretmek ve sana eşlik etmek için buradayım.",
+        suggestLearn: "Bana bir şey öğret",
+        suggestFood: "Tatlı bir tarif öner",
+        suggestResearch: "Detaylı araştırma",
+        suggestCreate: "Yaratıcı fikir üret",
+        firstMessage:
+          "Merhaba 🌸 Bugün nasıl hissediyorsun? İstersen önce biraz sohbet ederiz, sonra birlikte çözüm buluruz.",
+        messagePlaceholder: "MiMiAi'ye bir şey yaz...",
+        send: "Gönder",
+        demoNote:
+          "Bu sürüm tasarım demosudur. Gerçek AI beyni sonraki aşamada bağlanacaktır.",
+        studioHeading: "Hayalindeki resmi anlat",
+        studioText:
+          "Ortamı, renkleri, kişileri, ışığı ve istediğin tarzı ayrıntılı biçimde yaz.",
+        imagePlaceholder:
+          "Örnek: Pastel tonlarda, çiçekli masalsı bir bahçe...",
+        generate: "✨ Resmi tasarla",
+        previewText:
+          "Tasarım açıklaman burada zarif bir önizlemeye dönüşecek.",
+        memoryEmpty:
+          "MiMiAi ileride tercihlerini ve izin verdiğin önemli ayrıntıları burada hatırlayacak.",
+        historyEmpty:
+          "Önceki konuşmaların burada zarif ve düzenli şekilde listelenecek.",
+        filesEmpty:
+          "PDF, fotoğraf ve belgeleri MiMiAi'ye bu bölümden yükleyebileceksin.",
+        favoritesEmpty:
+          "Beğendiğin cevapları, fikirleri ve görselleri burada saklayabileceksin.",
+        settingsEmpty:
+          "Dil, görünüm, hafıza ve kişilik ayarlarını buradan yönetebileceksin.",
+        demoReply:
+          "Mesajını aldım 🌸 Gerçek AI beynim bağlandığında sana özgün ve ayrıntılı cevap vereceğim.",
+        previewPrefix: "Tasarlanacak görsel: ",
+        emptyPrompt: "Önce hayalindeki resmi biraz anlat 🌸"
+      },
 
-    const chatPanel = document.getElementById("chatPanel");
-    const imagePanel = document.getElementById("imagePanel");
+      en: {
+        languageName: "English",
+        brandSubtitle: "Kind, creative and honest",
+        newChat: "New chat",
+        chat: "Chat",
+        imageStudio: "Image studio",
+        memory: "Memory",
+        history: "Chat history",
+        files: "Files and PDF",
+        favorites: "Favorites",
+        settings: "Settings",
+        mimiMode: "MiMiAi mode",
+        mimiModeText: "Warm, honest and creative answers.",
+        chatTitle: "Chat with MiMiAi",
+        chatSubtitle: "You can comfortably ask anything on your mind.",
+        studioTitle: "MiMiAi Image Studio",
+        studioSubtitle: "Turn your imagination into aesthetic visuals.",
+        memoryTitle: "Memory",
+        memorySubtitle: "Manage the details MiMiAi remembers.",
+        historyTitle: "Chat history",
+        historySubtitle: "Return to your previous conversations.",
+        filesTitle: "Files and PDF",
+        filesSubtitle: "Upload documents and explore them together.",
+        favoritesTitle: "Favorites",
+        favoritesSubtitle: "View the content you have saved.",
+        settingsTitle: "Settings",
+        settingsSubtitle: "Personalize your MiMiAi experience.",
+        online: "● Online",
+        welcomeTitle: "Hello, I am MiMiAi",
+        welcomeText:
+          "I am here to answer, research, create ideas and stay by your side.",
+        suggestLearn: "Teach me something",
+        suggestFood: "Suggest a sweet recipe",
+        suggestResearch: "Deep research",
+        suggestCreate: "Create an idea",
+        firstMessage:
+          "Hello 🌸 How are you feeling today? We can talk first, then find a solution together.",
+        messagePlaceholder: "Write something to MiMiAi...",
+        send: "Send",
+        demoNote:
+          "This version is a design demo. The real AI brain will be connected next.",
+        studioHeading: "Describe your dream image",
+        studioText:
+          "Describe the setting, colors, people, lighting and style in detail.",
+        imagePlaceholder:
+          "Example: A dreamy flower garden in soft pastel colors...",
+        generate: "✨ Design image",
+        previewText:
+          "Your description will become an elegant preview here.",
+        memoryEmpty:
+          "MiMiAi will later remember your preferences and the important details you allow.",
+        historyEmpty:
+          "Your previous conversations will be listed here beautifully.",
+        filesEmpty:
+          "You will be able to upload PDFs, images and documents here.",
+        favoritesEmpty:
+          "You will be able to save your favorite answers, ideas and images here.",
+        settingsEmpty:
+          "You will manage language, appearance, memory and personality here.",
+        demoReply:
+          "I received your message 🌸 When my real AI brain is connected, I will give you an original and detailed answer.",
+        previewPrefix: "Image to design: ",
+        emptyPrompt: "First describe the image in your imagination 🌸"
+      },
 
-    const chat = document.getElementById("chat");
+      nl: {
+        languageName: "Nederlands",
+        brandSubtitle: "Lief, creatief en eerlijk",
+        newChat: "Nieuwe chat",
+        chat: "Chat",
+        imageStudio: "Beeldstudio",
+        memory: "Geheugen",
+        history: "Chatgeschiedenis",
+        files: "Bestanden en PDF",
+        favorites: "Favorieten",
+        settings: "Instellingen",
+        mimiMode: "MiMiAi-modus",
+        mimiModeText: "Warme, eerlijke en creatieve antwoorden.",
+        chatTitle: "Chat met MiMiAi",
+        chatSubtitle: "Je kunt alles vragen wat in je opkomt.",
+        studioTitle: "MiMiAi Beeldstudio",
+        studioSubtitle: "Verander je ideeën in esthetische beelden.",
+        memoryTitle: "Geheugen",
+        memorySubtitle: "Beheer wat MiMiAi onthoudt.",
+        historyTitle: "Chatgeschiedenis",
+        historySubtitle: "Ga terug naar eerdere gesprekken.",
+        filesTitle: "Bestanden en PDF",
+        filesSubtitle: "Upload documenten en bekijk ze samen.",
+        favoritesTitle: "Favorieten",
+        favoritesSubtitle: "Bekijk je opgeslagen inhoud.",
+        settingsTitle: "Instellingen",
+        settingsSubtitle: "Personaliseer je MiMiAi-ervaring.",
+        online: "● Online",
+        welcomeTitle: "Hallo, ik ben MiMiAi",
+        welcomeText:
+          "Ik ben er om vragen te beantwoorden, onderzoek te doen en ideeën te bedenken.",
+        suggestLearn: "Leer mij iets",
+        suggestFood: "Geef een zoet recept",
+        suggestResearch: "Diepgaand onderzoek",
+        suggestCreate: "Bedenk een idee",
+        firstMessage:
+          "Hallo 🌸 Hoe voel je je vandaag? We kunnen eerst praten en daarna samen een oplossing vinden.",
+        messagePlaceholder: "Schrijf iets aan MiMiAi...",
+        send: "Versturen",
+        demoNote:
+          "Dit is een ontwerpdemonstratie. De echte AI wordt later aangesloten.",
+        studioHeading: "Beschrijf je droombeeld",
+        studioText:
+          "Beschrijf de omgeving, kleuren, mensen, belichting en stijl.",
+        imagePlaceholder:
+          "Voorbeeld: Een dromerige bloementuin in zachte pasteltinten...",
+        generate: "✨ Ontwerp afbeelding",
+        previewText:
+          "Je beschrijving verschijnt hier als elegante preview.",
+        memoryEmpty:
+          "MiMiAi zal later je voorkeuren onthouden als jij dat toestaat.",
+        historyEmpty:
+          "Je eerdere gesprekken verschijnen hier overzichtelijk.",
+        filesEmpty:
+          "Je kunt hier later PDF's, foto's en documenten uploaden.",
+        favoritesEmpty:
+          "Je favoriete antwoorden en beelden kun je hier bewaren.",
+        settingsEmpty:
+          "Hier beheer je taal, uiterlijk, geheugen en persoonlijkheid.",
+        demoReply:
+          "Ik heb je bericht ontvangen 🌸 Zodra mijn echte AI is aangesloten, geef ik een uitgebreid antwoord.",
+        previewPrefix: "Te ontwerpen beeld: ",
+        emptyPrompt: "Beschrijf eerst het beeld dat je wilt maken 🌸"
+      }
+    };
+
+    const languageNames = {
+      tr: "Türkçe",
+      en: "English",
+      nl: "Nederlands",
+      bg: "Български",
+      ru: "Русский",
+      el: "Ελληνικά",
+      es: "Español",
+      fr: "Français",
+      it: "Italiano",
+      de: "Deutsch",
+      sv: "Svenska",
+      ja: "日本語"
+    };
+
+    let currentLanguage = "tr";
+    let currentTitleKey = "chatTitle";
+    let currentSubtitleKey = "chatSubtitle";
+
+    const body = document.body;
+    const sidebar = document.getElementById("sidebar");
+    const mobileOverlay = document.getElementById("mobileOverlay");
+    const mobileMenuButton = document.getElementById("mobileMenuButton");
+
+    const languageButton = document.getElementById("languageButton");
+    const languageMenu = document.getElementById("languageMenu");
+    const languageLabel = document.getElementById("languageLabel");
+
+    const themeButton = document.getElementById("themeButton");
+
+    const pageTitle = document.getElementById("pageTitle");
+    const pageSubtitle = document.getElementById("pageSubtitle");
+
+    const chatContent = document.getElementById("chatContent");
+    const messages = document.getElementById("messages");
     const messageInput = document.getElementById("messageInput");
     const sendButton = document.getElementById("sendButton");
-
-    const modeButtons = document.querySelectorAll(".mode");
-    const styleButtons = document.querySelectorAll(".style-option");
+    const newChatButton = document.getElementById("newChatButton");
 
     const imagePrompt = document.getElementById("imagePrompt");
     const generateButton = document.getElementById("generateButton");
-    const imageCanvas = document.getElementById("imageCanvas");
-    const previewDescription =
-      document.getElementById("previewDescription");
+    const previewText = document.getElementById("previewText");
 
-    let currentMode = "normal";
-    let currentImageStyle = "Pastel ve masalsı";
+    function getText(key) {
+      const selected =
+        translations[currentLanguage] || translations.en;
 
-    function showPanel(panelName) {
-      const isChat = panelName === "chat";
-
-      chatTab.classList.toggle("active", isChat);
-      imageTab.classList.toggle("active", !isChat);
-
-      chatPanel.classList.toggle("active", isChat);
-      imagePanel.classList.toggle("active", !isChat);
+      return (
+        selected[key] ||
+        translations.en[key] ||
+        translations.tr[key] ||
+        key
+      );
     }
 
-    chatTab.addEventListener("click", function () {
-      showPanel("chat");
+    function applyLanguage(lang) {
+      currentLanguage = lang;
+
+      const selectedLanguage =
+        translations[lang] || translations.en;
+
+      document.documentElement.lang = lang;
+      languageLabel.textContent =
+        languageNames[lang] || lang.toUpperCase();
+
+      document.querySelectorAll("[data-i18n]").forEach(function (element) {
+        const key = element.dataset.i18n;
+
+        element.textContent =
+          selectedLanguage[key] ||
+          translations.en[key] ||
+          translations.tr[key] ||
+          element.textContent;
+      });
+
+      document
+        .querySelectorAll("[data-placeholder-key]")
+        .forEach(function (element) {
+          const key = element.dataset.placeholderKey;
+
+          element.placeholder =
+            selectedLanguage[key] ||
+            translations.en[key] ||
+            translations.tr[key] ||
+            "";
+        });
+
+      pageTitle.textContent = getText(currentTitleKey);
+      pageSubtitle.textContent = getText(currentSubtitleKey);
+
+      localStorage.setItem("mimiai-language", lang);
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove("open");
+      mobileOverlay.classList.remove("open");
+    }
+
+    mobileMenuButton.addEventListener("click", function () {
+      sidebar.classList.add("open");
+      mobileOverlay.classList.add("open");
     });
 
-    imageTab.addEventListener("click", function () {
-      showPanel("image");
+    mobileOverlay.addEventListener("click", closeSidebar);
+
+    languageButton.addEventListener("click", function (event) {
+      event.stopPropagation();
+      languageMenu.classList.toggle("open");
     });
 
-    function addMessage(text, type, extraClass) {
+    document.addEventListener("click", function () {
+      languageMenu.classList.remove("open");
+    });
+
+    document
+      .querySelectorAll(".language-option")
+      .forEach(function (button) {
+        button.addEventListener("click", function () {
+          applyLanguage(button.dataset.lang);
+          languageMenu.classList.remove("open");
+        });
+      });
+
+    themeButton.addEventListener("click", function () {
+      body.classList.toggle("dark");
+
+      const isDark = body.classList.contains("dark");
+
+      themeButton.textContent = isDark ? "☀" : "☾";
+
+      localStorage.setItem(
+        "mimiai-theme",
+        isDark ? "dark" : "light"
+      );
+    });
+
+    document
+      .querySelectorAll(".menu-button[data-panel]")
+      .forEach(function (button) {
+        button.addEventListener("click", function () {
+          const panelId = button.dataset.panel;
+
+          document
+            .querySelectorAll(".panel")
+            .forEach(function (panel) {
+              panel.classList.remove("active");
+            });
+
+          document
+            .querySelectorAll(".menu-button[data-panel]")
+            .forEach(function (menuButton) {
+              menuButton.classList.remove("active");
+            });
+
+          document
+            .getElementById(panelId)
+            .classList.add("active");
+
+          button.classList.add("active");
+
+          currentTitleKey = button.dataset.titleKey;
+          currentSubtitleKey = button.dataset.subtitleKey;
+
+          pageTitle.textContent = getText(currentTitleKey);
+          pageSubtitle.textContent = getText(currentSubtitleKey);
+
+          closeSidebar();
+        });
+      });
+
+    function addUserMessage(text) {
+      const row = document.createElement("div");
+      row.className = "message-row user-row";
+
       const message = document.createElement("div");
-
-      message.className =
-        "message " +
-        type +
-        (extraClass ? " " + extraClass : "");
-
+      message.className = "message user";
       message.textContent = text;
 
-      chat.appendChild(message);
-      chat.scrollTop = chat.scrollHeight;
-
-      return message;
+      row.appendChild(message);
+      messages.appendChild(row);
     }
 
-    function createReply(text) {
-      const lowerText = text.toLocaleLowerCase("tr");
+    function addMimiMessage(text) {
+      const row = document.createElement("div");
+      row.className = "message-row";
 
-      if (
-        lowerText.includes("merhaba") ||
-        lowerText.includes("selam")
-      ) {
-        return "Merhaba 🌸 Bugün enerjim gayet yerinde. Sen nasılsın?";
-      }
+      const avatar = document.createElement("div");
+      avatar.className = "avatar";
+      avatar.textContent = "🌸";
 
-      if (lowerText.includes("oyun aç")) {
-        return "MiMi Oyun açıldı 🎮 Aklımdan 1 ile 10 arasında bir sayı tuttum. Tahmin et!";
-      }
+      const message = document.createElement("div");
+      message.className = "message mimi";
+      message.textContent = text;
 
-      if (lowerText.includes("doğum günüm")) {
-        return "İyi ki doğdun 🎉🎂🎁🎈!";
-      }
-
-      if (
-        lowerText.includes("yalnızım") ||
-        lowerText.includes("yalnız hissediyorum")
-      ) {
-        return "Böyle hissetmenin nedeni ne? Anlatmak istersen seni dinliyorum.";
-      }
-
-      if (
-        lowerText.includes("aptalım") ||
-        lowerText.includes("salakım")
-      ) {
-        return "Ben öyle düşünmüyorum. Bir şeyin zor gelmesi seni aptal yapmaz.";
-      }
-
-      if (lowerText.includes("başarabilir miyim")) {
-        return "Başaramasan da elinden geleni yapmış olursun. Yine de doğru planla şansını birlikte artırabiliriz.";
-      }
-
-      if (lowerText.includes("canım sıkılıyor")) {
-        return "Can sıkıntısı beynin düşük bütçeli bildirimidir. 😄 Bir oyun açalım mı?";
-      }
-
-      if (lowerText.includes("makarna")) {
-        return "Makarna tarafsız biçimde mükemmel bir fikir. 🍝 Evde hangi malzemeler var?";
-      }
-
-      if (currentMode === "teacher") {
-        return "Öğretmen modundayım 📚 Konuyu yaz; sana kolaydan zora doğru anlatayım.";
-      }
-
-      if (currentMode === "chef") {
-        return "Şef MiMi burada 🍝 Kaç kişilik yemek istiyorsun ve evde hangi malzemeler var?";
-      }
-
-      if (currentMode === "fun") {
-        return "Eğlence modu açık 🎮 Oyun, bilmece veya soğuk espri seçebilirsin.";
-      }
-
-      if (currentMode === "research") {
-        return "Araştırma modundayım 🔎 Gerçek internet araştırması, güvenli AI beynini bağladığımız sonraki aşamada çalışacak.";
-      }
-
-      return "Seni duydum 🌸 Şu anda tasarım ve deneme sürümündeyim. Gerçek AI beynim bağlandığında sana ayrıntılı cevap vereceğim.";
+      row.appendChild(avatar);
+      row.appendChild(message);
+      messages.appendChild(row);
     }
 
-    function sendMessage() {
-      const text = messageInput.value.trim();
+    function sendMessage(textValue) {
+      const text =
+        typeof textValue === "string"
+          ? textValue.trim()
+          : messageInput.value.trim();
 
       if (!text) {
+        messageInput.focus();
         return;
       }
 
-      addMessage(text, "user");
-      messageInput.value = "";
+      addUserMessage(text);
 
-      const typingMessage = addMessage(
-        "MiMiAi düşünüyor...",
-        "bot",
-        "typing"
-      );
+      messageInput.value = "";
+      resizeMessageInput();
 
       window.setTimeout(function () {
-        typingMessage.remove();
-        addMessage(createReply(text), "bot");
-      }, 500);
+        addMimiMessage(getText("demoReply"));
+        chatContent.scrollTop = chatContent.scrollHeight;
+      }, 450);
+
+      chatContent.scrollTop = chatContent.scrollHeight;
     }
 
-    sendButton.addEventListener("click", sendMessage);
+    sendButton.addEventListener("click", function () {
+      sendMessage();
+    });
 
     messageInput.addEventListener("keydown", function (event) {
-      if (event.key === "Enter") {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
         sendMessage();
       }
     });
 
-    modeButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        modeButtons.forEach(function (item) {
-          item.classList.remove("active");
-        });
-
-        button.classList.add("active");
-        currentMode = button.dataset.mode;
-
-        addMessage(
-          button.textContent.trim() + " modu açıldı.",
-          "bot"
-        );
-      });
-    });
-
-    styleButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        styleButtons.forEach(function (item) {
-          item.classList.remove("active");
-        });
-
-        button.classList.add("active");
-        currentImageStyle = button.dataset.style;
-      });
-    });
-
-    function choosePreviewBackground(style) {
-      if (style === "Gerçekçi ve zarif") {
-        return (
-          "radial-gradient(circle at 25% 18%, #f1d5df, transparent 35%)," +
-          "radial-gradient(circle at 82% 20%, #f7e7af, transparent 33%)," +
-          "linear-gradient(145deg, #d9c8e7, #f6e8ed 50%, #d4ece1)"
-        );
-      }
-
-      if (style === "Sevimli çizgi film") {
-        return (
-          "radial-gradient(circle at 18% 18%, #ffcfe3, transparent 34%)," +
-          "radial-gradient(circle at 82% 18%, #ffeaa9, transparent 34%)," +
-          "radial-gradient(circle at 76% 82%, #c9f0df, transparent 36%)," +
-          "linear-gradient(145deg, #d9c4f1, #fff0f6)"
-        );
-      }
-
-      if (style === "Zarif suluboya") {
-        return (
-          "radial-gradient(circle at 20% 20%, rgba(219,185,233,.95), transparent 38%)," +
-          "radial-gradient(circle at 80% 22%, rgba(249,219,185,.9), transparent 38%)," +
-          "radial-gradient(circle at 70% 84%, rgba(190,229,211,.95), transparent 42%)," +
-          "linear-gradient(145deg, #fff5fa, #f2e9f8)"
-        );
-      }
-
-      return (
-        "radial-gradient(circle at 20% 20%, #f4cbdc, transparent 33%)," +
-        "radial-gradient(circle at 80% 18%, #f8e8a8, transparent 32%)," +
-        "radial-gradient(circle at 78% 82%, #c9eadc, transparent 36%)," +
-        "linear-gradient(145deg, #dbc6ed, #fff0f6 45%, #fff9dc 75%, #effbf6)"
-      );
+    function resizeMessageInput() {
+      messageInput.style.height = "auto";
+      messageInput.style.height =
+        Math.min(messageInput.scrollHeight, 130) + "px";
     }
+
+    messageInput.addEventListener("input", resizeMessageInput);
+
+    document
+      .querySelectorAll(".suggestion")
+      .forEach(function (button) {
+        button.addEventListener("click", function () {
+          sendMessage(button.dataset.message);
+        });
+      });
+
+    newChatButton.addEventListener("click", function () {
+      messages.innerHTML = "";
+
+      addMimiMessage(getText("firstMessage"));
+
+      document
+        .querySelectorAll(".panel")
+        .forEach(function (panel) {
+          panel.classList.remove("active");
+        });
+
+      document
+        .getElementById("chatPanel")
+        .classList.add("active");
+
+      document
+        .querySelectorAll(".menu-button[data-panel]")
+        .forEach(function (button) {
+          button.classList.remove("active");
+        });
+
+      const chatMenuButton =
+        document.querySelector('[data-panel="chatPanel"]');
+
+      chatMenuButton.classList.add("active");
+
+      currentTitleKey = "chatTitle";
+      currentSubtitleKey = "chatSubtitle";
+
+      pageTitle.textContent = getText(currentTitleKey);
+      pageSubtitle.textContent = getText(currentSubtitleKey);
+
+      closeSidebar();
+    });
+
+    document
+      .querySelectorAll(".style-chip")
+      .forEach(function (chip) {
+        chip.addEventListener("click", function () {
+          document
+            .querySelectorAll(".style-chip")
+            .forEach(function (item) {
+              item.classList.remove("selected");
+            });
+
+          chip.classList.add("selected");
+        });
+      });
 
     generateButton.addEventListener("click", function () {
       const prompt = imagePrompt.value.trim();
 
       if (!prompt) {
-        previewDescription.textContent =
-          "Önce tasarlamak istediğin resmi tarif et 🌸";
+        previewText.textContent = getText("emptyPrompt");
         imagePrompt.focus();
         return;
       }
 
-      generateButton.textContent = "✨ Tasarlanıyor...";
-      generateButton.disabled = true;
+      const selectedStyle =
+        document.querySelector(".style-chip.selected");
 
-      window.setTimeout(function () {
-        imageCanvas.style.background =
-          choosePreviewBackground(currentImageStyle);
+      const style = selectedStyle
+        ? selectedStyle.textContent.trim()
+        : "Aesthetic";
 
-        previewDescription.textContent =
-          currentImageStyle + ": " + prompt;
-
-        generateButton.textContent = "✨ Yeniden Tasarla";
-        generateButton.disabled = false;
-      }, 700);
+      previewText.textContent =
+        getText("previewPrefix") +
+        prompt +
+        " • " +
+        style;
     });
+
+    document
+      .getElementById("fileButton")
+      .addEventListener("click", function () {
+        alert(
+          "Dosya yükleme özelliği AI altyapısı ile birlikte eklenecek."
+        );
+      });
+
+    document
+      .getElementById("voiceButton")
+      .addEventListener("click", function () {
+        alert(
+          "Ses özelliği AI altyapısı ile birlikte eklenecek."
+        );
+      });
+
+    const savedLanguage =
+      localStorage.getItem("mimiai-language") || "tr";
+
+    const savedTheme =
+      localStorage.getItem("mimiai-theme");
+
+    if (savedTheme === "dark") {
+      body.classList.add("dark");
+      themeButton.textContent = "☀";
+    }
+
+    applyLanguage(savedLanguage);
   </script>
 </body>
-</html>
+</html>j
