@@ -1,139 +1,355 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyAI</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#b79adf" />
 
-<style>
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#111827;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
+  <title>MiMiAi</title>
 
-#chat{
-width:90%;
-max-width:600px;
-height:85vh;
-background:#1f2937;
-border-radius:20px;
-display:flex;
-flex-direction:column;
-overflow:hidden;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-header{
-padding:20px;
-font-size:24px;
-font-weight:bold;
-text-align:center;
-background:#2563eb;
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #f6eefe, transparent 45%),
+        linear-gradient(160deg, #fffaff, #eee3fa);
+      color: #3f3150;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 14px;
+    }
 
-#messages{
-flex:1;
-padding:15px;
-overflow:auto;
-}
+    .app {
+      width: 100%;
+      max-width: 520px;
+      height: min(820px, 94vh);
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(138, 102, 180, 0.18);
+      border-radius: 30px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 70px rgba(83, 54, 112, 0.18);
+      backdrop-filter: blur(18px);
+    }
 
-.message{
-padding:12px;
-border-radius:12px;
-margin-bottom:10px;
-max-width:80%;
-}
+    header {
+      background: linear-gradient(135deg, #9f7aca, #c7a8e8);
+      color: white;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
 
-.user{
-background:#2563eb;
-margin-left:auto;
-}
+    .logo {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.93);
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      box-shadow: 0 8px 20px rgba(74, 44, 103, 0.18);
+    }
 
-.bot{
-background:#374151;
-}
+    .brand h1 {
+      margin: 0;
+      font-size: 25px;
+      letter-spacing: 0.3px;
+    }
 
-#inputArea{
-display:flex;
-padding:10px;
-background:#111827;
-}
+    .brand p {
+      margin: 3px 0 0;
+      font-size: 13px;
+      opacity: 0.92;
+    }
 
-input{
-flex:1;
-padding:12px;
-border:none;
-border-radius:10px;
-font-size:16px;
-}
+    .modes {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 12px;
+      background: #fbf8ff;
+      border-bottom: 1px solid #eadff4;
+    }
 
-button{
-margin-left:10px;
-padding:12px 18px;
-border:none;
-border-radius:10px;
-background:#2563eb;
-color:white;
-font-size:16px;
-}
-</style>
+    .mode {
+      border: 1px solid #dccbeb;
+      background: white;
+      color: #684c83;
+      border-radius: 999px;
+      padding: 8px 12px;
+      white-space: nowrap;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .mode.active {
+      background: #a783cf;
+      color: white;
+      border-color: #a783cf;
+    }
+
+    #chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message {
+      max-width: 84%;
+      padding: 12px 14px;
+      border-radius: 18px;
+      line-height: 1.45;
+      font-size: 15px;
+      white-space: pre-wrap;
+      animation: appear 0.25s ease;
+    }
+
+    .bot {
+      align-self: flex-start;
+      background: #f0e7fa;
+      color: #49345e;
+      border-bottom-left-radius: 5px;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #9e79ca, #b99add);
+      color: white;
+      border-bottom-right-radius: 5px;
+    }
+
+    .typing {
+      opacity: 0.7;
+      font-style: italic;
+    }
+
+    .composer {
+      padding: 12px;
+      display: flex;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      border-top: 1px solid #eadff4;
+    }
+
+    #input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid #dac9e9;
+      border-radius: 18px;
+      padding: 13px 14px;
+      font-size: 16px;
+      outline: none;
+      color: #3f3150;
+      background: #fff;
+    }
+
+    #input:focus {
+      border-color: #a783cf;
+      box-shadow: 0 0 0 3px rgba(167, 131, 207, 0.14);
+    }
+
+    #send {
+      border: none;
+      border-radius: 17px;
+      padding: 0 18px;
+      background: linear-gradient(135deg, #9872c4, #b899da);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    #send:active {
+      transform: scale(0.97);
+    }
+
+    footer {
+      text-align: center;
+      padding: 7px 10px 10px;
+      font-size: 11px;
+      color: #8b789d;
+      background: white;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(7px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <main class="app">
+    <header>
+      <div class="logo">🌸</div>
 
-<div id="chat">
+      <div class="brand">
+        <h1>MiMiAi</h1>
+        <p>Nazik, enerjik ve dürüst AI arkadaşın</p>
+      </div>
+    </header>
 
-<header>
-🤖 MyAI
-</header>
+    <nav class="modes">
+      <button class="mode active" data-mode="normal">💜 Normal</button>
+      <button class="mode" data-mode="teacher">📚 Öğretmen</button>
+      <button class="mode" data-mode="chef">🍝 Şef MiMi</button>
+      <button class="mode" data-mode="fun">🎮 Eğlence</button>
+      <button class="mode" data-mode="research">🔎 Araştırma</button>
+    </nav>
 
-<div id="messages">
-<div class="message bot">
-Merhaba! Ben senin yapay zekânım.
-</div>
-</div>
+    <section id="chat">
+      <div class="message bot">
+        Merhaba! Ben MiMiAi 🌸
 
-<div id="inputArea">
+        Sana bugün nasıl yardımcı olabilirim?
+      </div>
+    </section>
 
-<input
-id="question"
-placeholder="Bir şey yaz..."
->
+    <div class="composer">
+      <input
+        id="input"
+        type="text"
+        placeholder="Bir şey yaz..."
+        autocomplete="off"
+      />
+      <button id="send" type="button">Gönder</button>
+    </div>
 
-<button onclick="sendMessage()">
-Gönder
-</button>
+    <footer>MiMiAi • İlk çalışan sürüm</footer>
+  </main>
 
-</div>
+  <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("input");
+    const sendButton = document.getElementById("send");
+    const modeButtons = document.querySelectorAll(".mode");
 
-</div>
+    let currentMode = "normal";
 
-<script>
+    function addMessage(text, type, extraClass = "") {
+      const message = document.createElement("div");
+      message.className = `message ${type} ${extraClass}`.trim();
+      message.textContent = text;
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
+      return message;
+    }
 
-function sendMessage(){
+    function getReply(text) {
+      const lower = text.toLocaleLowerCase("tr");
 
-let input=document.getElementById("question");
+      if (
+        lower.includes("mimi oyun aç") ||
+        lower.includes("oyun aç")
+      ) {
+        return "MiMi Oyun açıldı 🎮\n\nAklımdan 1 ile 10 arasında bir sayı tuttum. Tahmin et!";
+      }
 
-let text=input.value;
+      if (lower.includes("merhaba") || lower.includes("selam")) {
+        return "Merhaba! 🌸 Bugün enerjim yerinde. Sen nasılsın?";
+      }
 
-if(text=="") return;
+      if (lower.includes("doğum günüm")) {
+        return "İyi ki doğdun 🎉🎂🎁🎈!";
+      }
 
-document.getElementById("messages").innerHTML+=
-'<div class="message user">'+text+'</div>';
+      if (lower.includes("yalnızım") || lower.includes("yalnız hissediyorum")) {
+        return "Böyle hissetmenin nedeni ne? Anlatmak istersen seni dinliyorum.";
+      }
 
-document.getElementById("messages").innerHTML+=
-'<div class="message bot">Şimdilik cevap verme kısmını birazdan ekleyeceğiz 🙂</div>';
+      if (lower.includes("aptalım") || lower.includes("salakım")) {
+        return "Ben öyle düşünmüyorum. Bir şeyin zor gelmesi seni aptal yapmaz.";
+      }
 
-input.value="";
+      if (lower.includes("başarabilir miyim")) {
+        return "Başaramasan da elinden geleni yapmış olursun. Ama doğru bir planla şansını ciddi şekilde artırabiliriz.";
+      }
 
-}
+      if (lower.includes("canım sıkılıyor")) {
+        return "Can sıkıntısı beynin 'bana içerik ver' diye attığı düşük bütçeli bir bildirimdir. 😄\n\nMiMi Oyun açmamı ister misin?";
+      }
 
-</script>
+      if (lower.includes("uyuyamıyorum")) {
+        return "Geri uyumayı dene 😄 Telefonu biraz bırakıp yavaş nefes almak da yardımcı olabilir.";
+      }
 
+      if (lower.includes("makarna")) {
+        return "Makarna doğru bir karar. MiMiAi bunu tamamen tarafsız biçimde söylüyor tabii. 🍝\n\nEvde hangi malzemeler var?";
+      }
+
+      if (currentMode === "chef") {
+        return "Şef MiMi burada 👩‍🍳 Evindeki malzemeleri ve kaç kişilik istediğini yaz; sana uygun bir tarif oluşturalım.";
+      }
+
+      if (currentMode === "teacher") {
+        return "Öğretmen modundayım 📚 Konuyu yaz; sana adım adım ve kolay anlaşılır biçimde anlatayım.";
+      }
+
+      if (currentMode === "fun") {
+        return "Eğlence modu açık 🎮 Bilmece, soğuk espri veya sayı tahmin oyunu seçebilirsin.";
+      }
+
+      if (currentMode === "research") {
+        return "Araştırma modundayım 🔎 Gerçek internet araştırmasını bir sonraki aşamada bağlayacağız. Şimdilik konuyu yazabilirsin.";
+      }
+
+      return "Bunu anladım. Şu an ilk deneme sürümündeyim; gerçek AI beynimi bağladığımızda sana çok daha ayrıntılı cevap vereceğim. 🌸";
+    }
+
+    function sendMessage() {
+      const text = input.value.trim();
+
+      if (!text) return;
+
+      addMessage(text, "user");
+      input.value = "";
+
+      const typing = addMessage("MiMiAi düşünüyor...", "bot", "typing");
+
+      setTimeout(() => {
+        typing.remove();
+        addMessage(getReply(text), "bot");
+      }, 550);
+    }
+
+    sendButton.addEventListener("click", sendMessage);
+
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    modeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        modeButtons.forEach((item) => item.classList.remove("active"));
+        button.classList.add("active");
+        currentMode = button.dataset.mode;
+
+        addMessage(
+          `${button.textContent.trim()} modu açıldı.`,
+          "bot"
+        );
+      });
+    });
+  </script>
 </body>
 </html>
