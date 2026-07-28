@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyAI</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#111827;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+#chat{
+width:90%;
+max-width:600px;
+height:85vh;
+background:#1f2937;
+border-radius:20px;
+display:flex;
+flex-direction:column;
+overflow:hidden;
+}
+
+header{
+padding:20px;
+font-size:24px;
+font-weight:bold;
+text-align:center;
+background:#2563eb;
+}
+
+#messages{
+flex:1;
+padding:15px;
+overflow:auto;
+}
+
+.message{
+padding:12px;
+border-radius:12px;
+margin-bottom:10px;
+max-width:80%;
+}
+
+.user{
+background:#2563eb;
+margin-left:auto;
+}
+
+.bot{
+background:#374151;
+}
+
+#inputArea{
+display:flex;
+padding:10px;
+background:#111827;
+}
+
+input{
+flex:1;
+padding:12px;
+border:none;
+border-radius:10px;
+font-size:16px;
+}
+
+button{
+margin-left:10px;
+padding:12px 18px;
+border:none;
+border-radius:10px;
+background:#2563eb;
+color:white;
+font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="chat">
+
+<header>
+🤖 MyAI
+</header>
+
+<div id="messages">
+<div class="message bot">
+Merhaba! Ben senin yapay zekânım.
+</div>
+</div>
+
+<div id="inputArea">
+
+<input
+id="question"
+placeholder="Bir şey yaz..."
+>
+
+<button onclick="sendMessage()">
+Gönder
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+function sendMessage(){
+
+let input=document.getElementById("question");
+
+let text=input.value;
+
+if(text=="") return;
+
+document.getElementById("messages").innerHTML+=
+'<div class="message user">'+text+'</div>';
+
+document.getElementById("messages").innerHTML+=
+'<div class="message bot">Şimdilik cevap verme kısmını birazdan ekleyeceğiz 🙂</div>';
+
+input.value="";
+
+}
+
+</script>
+
+</body>
+</html>
