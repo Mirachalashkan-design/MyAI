@@ -1,33 +1,1239 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MiMiAi Test</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#c6a8e5">
+
+  <title>MiMiAi</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Nunito:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --lilac: #b99bd9;
+      --lilac-dark: #74548f;
+      --lilac-light: #eee3f8;
+
+      --pink: #f4cbdc;
+      --pink-light: #fff0f6;
+
+      --yellow: #f8e8a8;
+      --yellow-light: #fff9dc;
+
+      --mint: #c9eadc;
+      --mint-light: #effbf6;
+
+      --cream: #fffaf4;
+      --white: #ffffff;
+      --text: #493b53;
+      --muted: #806f89;
+      --border: rgba(102, 73, 121, 0.14);
+      --shadow: rgba(87, 57, 106, 0.17);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+
+      font-family: "Nunito", Arial, sans-serif;
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 8% 8%,
+          rgba(244, 203, 220, 0.95) 0,
+          rgba(244, 203, 220, 0) 30%
+        ),
+        radial-gradient(
+          circle at 92% 15%,
+          rgba(248, 232, 168, 0.9) 0,
+          rgba(248, 232, 168, 0) 28%
+        ),
+        radial-gradient(
+          circle at 88% 90%,
+          rgba(201, 234, 220, 0.95) 0,
+          rgba(201, 234, 220, 0) 32%
+        ),
+        linear-gradient(
+          145deg,
+          #f7edff 0%,
+          #fff6fa 42%,
+          #fffbed 70%,
+          #effbf6 100%
+        );
+    }
+
+    button,
+    input,
+    textarea {
+      font-family: inherit;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 560px;
+      height: min(880px, 95vh);
+
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 32px;
+
+      background: rgba(255, 255, 255, 0.83);
+      box-shadow:
+        0 30px 80px var(--shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .header {
+      position: relative;
+      padding: 18px;
+
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+
+      background:
+        radial-gradient(
+          circle at 92% 15%,
+          rgba(248, 232, 168, 0.85),
+          transparent 32%
+        ),
+        radial-gradient(
+          circle at 10% 90%,
+          rgba(201, 234, 220, 0.8),
+          transparent 36%
+        ),
+        linear-gradient(
+          135deg,
+          #e8d6f6 0%,
+          #f7ddea 48%,
+          #fff1bd 100%
+        );
+    }
+
+    .logo {
+      width: 68px;
+      height: 68px;
+      flex: 0 0 68px;
+
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+
+      border: 2px solid rgba(255, 255, 255, 0.95);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.87);
+
+      box-shadow: 0 10px 25px rgba(98, 67, 116, 0.18);
+    }
+
+    .logo svg {
+      width: 62px;
+      height: 62px;
+      display: block;
+    }
+
+    .brand {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .brand h1 {
+      margin: 0;
+
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 34px;
+      line-height: 0.95;
+      letter-spacing: 0.4px;
+      color: #644879;
+    }
+
+    .brand p {
+      margin: 7px 0 0;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #725f7c;
+    }
+
+    .online {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      padding: 7px 9px;
+      border: 1px solid rgba(101, 145, 125, 0.16);
+      border-radius: 999px;
+
+      background: rgba(239, 251, 246, 0.86);
+      color: #527863;
+
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .online-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #72c69e;
+      box-shadow: 0 0 0 4px rgba(114, 198, 158, 0.16);
+    }
+
+    .main-tabs {
+      padding: 10px 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+
+      background: rgba(255, 255, 255, 0.85);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .main-tab {
+      min-height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.9);
+
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+
+      transition:
+        transform 0.15s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .main-tab.active {
+      color: #604276;
+      border-color: rgba(155, 119, 186, 0.26);
+      background: linear-gradient(
+        135deg,
+        var(--lilac-light),
+        var(--pink-light)
+      );
+      box-shadow: 0 7px 18px rgba(118, 83, 138, 0.12);
+    }
+
+    .main-tab:active {
+      transform: scale(0.98);
+    }
+
+    .panel {
+      min-height: 0;
+      flex: 1;
+      display: none;
+      flex-direction: column;
+    }
+
+    .panel.active {
+      display: flex;
+    }
+
+    .modes {
+      padding: 11px 12px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 250, 244, 0.74);
+
+      scrollbar-width: none;
+    }
+
+    .modes::-webkit-scrollbar {
+      display: none;
+    }
+
+    .mode {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+
+      border: 1px solid var(--border);
+      border-radius: 999px;
+
+      color: #675773;
+      background: rgba(255, 255, 255, 0.9);
+
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .mode.active {
+      color: #ffffff;
+      border-color: transparent;
+      background: linear-gradient(
+        135deg,
+        #a984ca,
+        #d39cba
+      );
+      box-shadow: 0 7px 16px rgba(124, 83, 143, 0.17);
+    }
+
+    #chat {
+      min-height: 0;
+      flex: 1;
+
+      padding: 17px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+
+      background:
+        radial-gradient(
+          circle at 5% 10%,
+          rgba(238, 227, 248, 0.75),
+          transparent 32%
+        ),
+        radial-gradient(
+          circle at 95% 75%,
+          rgba(201, 234, 220, 0.48),
+          transparent 30%
+        ),
+        rgba(255, 255, 255, 0.42);
+    }
+
+    .message {
+      max-width: 84%;
+      padding: 12px 14px;
+
+      border: 1px solid rgba(98, 71, 115, 0.08);
+      border-radius: 19px;
+
+      font-size: 14.5px;
+      line-height: 1.48;
+      white-space: pre-wrap;
+
+      box-shadow: 0 7px 18px rgba(91, 61, 108, 0.07);
+      animation: rise 0.22s ease;
+    }
+
+    .bot {
+      align-self: flex-start;
+      color: #4f4058;
+      border-bottom-left-radius: 6px;
+
+      background: linear-gradient(
+        135deg,
+        #f1e6fa,
+        #fff0f6
+      );
+    }
+
+    .user {
+      align-self: flex-end;
+      color: #ffffff;
+      border-bottom-right-radius: 6px;
+
+      background: linear-gradient(
+        135deg,
+        #9d79bd,
+        #d28faf
+      );
+    }
+
+    .typing {
+      font-style: italic;
+      opacity: 0.68;
+    }
+
+    .composer {
+      padding: 11px;
+      display: flex;
+      gap: 8px;
+
+      border-top: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.92);
+    }
+
+    #messageInput {
+      min-width: 0;
+      flex: 1;
+      padding: 13px 14px;
+
+      border: 1px solid rgba(113, 79, 132, 0.18);
+      border-radius: 17px;
+      outline: none;
+
+      color: var(--text);
+      background: #fffdfd;
+
+      font-size: 15px;
+    }
+
+    #messageInput:focus {
+      border-color: #b394cc;
+      box-shadow: 0 0 0 4px rgba(185, 155, 217, 0.15);
+    }
+
+    .send-button {
+      min-width: 84px;
+      padding: 0 15px;
+
+      border: none;
+      border-radius: 16px;
+
+      color: #ffffff;
+      background: linear-gradient(
+        135deg,
+        #9873b9,
+        #d28faf
+      );
+
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+
+      box-shadow: 0 8px 18px rgba(121, 81, 140, 0.18);
+    }
+
+    .send-button:active {
+      transform: scale(0.97);
+    }
+
+    .image-panel-content {
+      min-height: 0;
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+
+      background:
+        radial-gradient(
+          circle at 10% 12%,
+          rgba(244, 203, 220, 0.6),
+          transparent 32%
+        ),
+        radial-gradient(
+          circle at 90% 15%,
+          rgba(248, 232, 168, 0.65),
+          transparent 30%
+        ),
+        radial-gradient(
+          circle at 75% 95%,
+          rgba(201, 234, 220, 0.65),
+          transparent 32%
+        ),
+        rgba(255, 255, 255, 0.5);
+    }
+
+    .image-title {
+      margin: 0;
+
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 29px;
+      color: #674b78;
+    }
+
+    .image-description {
+      margin: 5px 0 15px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .prompt-label {
+      display: block;
+      margin-bottom: 7px;
+
+      color: #604e6a;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    #imagePrompt {
+      width: 100%;
+      min-height: 90px;
+      resize: vertical;
+
+      padding: 13px 14px;
+      border: 1px solid rgba(111, 77, 130, 0.17);
+      border-radius: 17px;
+      outline: none;
+
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.9);
+
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    #imagePrompt:focus {
+      border-color: #b394cc;
+      box-shadow: 0 0 0 4px rgba(185, 155, 217, 0.14);
+    }
+
+    .style-options {
+      margin: 12px 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .style-option {
+      padding: 10px 8px;
+
+      border: 1px solid var(--border);
+      border-radius: 14px;
+
+      color: #6d5a77;
+      background: rgba(255, 255, 255, 0.88);
+
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .style-option.active {
+      color: #604276;
+      border-color: rgba(163, 124, 194, 0.25);
+      background: linear-gradient(
+        135deg,
+        var(--lilac-light),
+        var(--pink-light)
+      );
+    }
+
+    .generate-button {
+      width: 100%;
+      min-height: 48px;
+
+      border: none;
+      border-radius: 17px;
+
+      color: #594467;
+      background: linear-gradient(
+        135deg,
+        #e0c8ef,
+        #f4cbdc 45%,
+        #f8e8a8 72%,
+        #c9eadc
+      );
+
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+
+      box-shadow: 0 10px 22px rgba(107, 73, 126, 0.14);
+    }
+
+    .generate-button:active {
+      transform: scale(0.985);
+    }
+
+    .image-result {
+      margin-top: 14px;
+      padding: 10px;
+
+      border: 1px solid rgba(106, 77, 122, 0.13);
+      border-radius: 22px;
+
+      background: rgba(255, 255, 255, 0.74);
+      box-shadow: 0 14px 30px rgba(88, 58, 104, 0.09);
+    }
+
+    .image-canvas {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 17px;
+      background:
+        radial-gradient(
+          circle at 20% 20%,
+          rgba(244, 203, 220, 0.96),
+          transparent 33%
+        ),
+        radial-gradient(
+          circle at 80% 18%,
+          rgba(248, 232, 168, 0.95),
+          transparent 32%
+        ),
+        radial-gradient(
+          circle at 78% 82%,
+          rgba(201, 234, 220, 0.98),
+          transparent 36%
+        ),
+        linear-gradient(
+          145deg,
+          #dbc6ed,
+          #fff0f6 45%,
+          #fff9dc 75%,
+          #effbf6
+        );
+    }
+
+    .decorative-flower {
+      position: absolute;
+      font-size: 46px;
+      filter: saturate(0.78);
+      opacity: 0.75;
+    }
+
+    .flower-one {
+      top: 10%;
+      left: 9%;
+      transform: rotate(-14deg);
+    }
+
+    .flower-two {
+      right: 8%;
+      bottom: 9%;
+      transform: rotate(14deg);
+    }
+
+    .preview-text {
+      position: relative;
+      z-index: 2;
+
+      max-width: 82%;
+      padding: 17px;
+
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+
+      text-align: center;
+      color: #654a75;
+      background: rgba(255, 255, 255, 0.68);
+
+      box-shadow: 0 12px 28px rgba(86, 56, 102, 0.12);
+      backdrop-filter: blur(10px);
+    }
+
+    .preview-text strong {
+      display: block;
+      margin-bottom: 6px;
+
+      font-family: "Cormorant Garamond", Georgia, serif;
+      font-size: 27px;
+    }
+
+    .preview-text span {
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .image-note {
+      margin: 9px 3px 1px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .footer {
+      padding: 7px 10px 9px;
+      text-align: center;
+
+      color: #95859c;
+      background: rgba(255, 255, 255, 0.9);
+
+      font-size: 10.5px;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 430px) {
+      body {
+        padding: 0;
+      }
+
+      .app {
+        height: 100vh;
+        max-height: none;
+        border: none;
+        border-radius: 0;
+      }
+
+      .online {
+        display: none;
+      }
+    }
+  </style>
 </head>
 
-<body style="
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#d9c2f0;
-  font-family:Arial,sans-serif;
-">
+<body>
+  <main class="app">
+    <header class="header">
+      <div class="logo" aria-label="MiMiAi çiçekli logosu">
+        <svg
+          viewBox="0 0 100 100"
+          role="img"
+          aria-label="Pastel çiçekli MiMiAi logosu"
+        >
+          <defs>
+            <linearGradient
+              id="mGradient"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="1"
+            >
+              <stop offset="0%" stop-color="#765392"></stop>
+              <stop offset="100%" stop-color="#bd8eb1"></stop>
+            </linearGradient>
+          </defs>
 
-  <div style="
-    background:white;
-    color:#5f4278;
-    padding:35px;
-    border-radius:25px;
-    text-align:center;
-    box-shadow:0 15px 40px rgba(80,50,110,.25);
-  ">
-    <div style="font-size:55px;">🌸</div>
-    <h1 style="margin:10px 0;">MiMiAi</h1>
-    <p style="margin:0;">Lila tasarım testi çalışıyor.</p>
-  </div>
+          <circle
+            cx="50"
+            cy="50"
+            r="47"
+            fill="#fffafd"
+            stroke="#dac5e8"
+            stroke-width="2"
+          ></circle>
 
+          <path
+            d="M23 72 V31 L49 62 L76 31 V72"
+            fill="none"
+            stroke="url(#mGradient)"
+            stroke-width="7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+
+          <path
+            d="M20 65 C16 51 19 38 31 27"
+            fill="none"
+            stroke="#8c6baa"
+            stroke-width="2.4"
+            stroke-linecap="round"
+          ></path>
+
+          <ellipse
+            cx="20"
+            cy="57"
+            rx="5"
+            ry="9"
+            transform="rotate(-32 20 57)"
+            fill="#c9eadc"
+          ></ellipse>
+
+          <ellipse
+            cx="21"
+            cy="43"
+            rx="5"
+            ry="9"
+            transform="rotate(32 21 43)"
+            fill="#f4cbdc"
+          ></ellipse>
+
+          <ellipse
+            cx="30"
+            cy="31"
+            rx="5"
+            ry="9"
+            transform="rotate(52 30 31)"
+            fill="#f8e8a8"
+          ></ellipse>
+
+          <circle
+            cx="28"
+            cy="47"
+            r="6"
+            fill="#dfc8ec"
+          ></circle>
+
+          <circle
+            cx="28"
+            cy="47"
+            r="2"
+            fill="#7e5b99"
+          ></circle>
+
+          <path
+            d="M77 21 L80 29 L88 32 L80 35 L77 43 L74 35 L66 32 L74 29 Z"
+            fill="#b184c7"
+          ></path>
+        </svg>
+      </div>
+
+      <div class="brand">
+        <h1>MiMiAi</h1>
+        <p>Nazik, enerjik ve dürüst AI arkadaşın</p>
+      </div>
+
+      <div class="online">
+        <span class="online-dot"></span>
+        Çevrimiçi
+      </div>
+    </header>
+
+    <div class="main-tabs">
+      <button
+        id="chatTab"
+        class="main-tab active"
+        type="button"
+      >
+        💬 MiMi ile Konuş
+      </button>
+
+      <button
+        id="imageTab"
+        class="main-tab"
+        type="button"
+      >
+        🎨 Resim Tasarla
+      </button>
+    </div>
+
+    <section
+      id="chatPanel"
+      class="panel active"
+    >
+      <nav class="modes" aria-label="MiMiAi modları">
+        <button
+          class="mode active"
+          data-mode="normal"
+          type="button"
+        >
+          💜 Normal
+        </button>
+
+        <button
+          class="mode"
+          data-mode="teacher"
+          type="button"
+        >
+          📚 Öğretmen
+        </button>
+
+        <button
+          class="mode"
+          data-mode="chef"
+          type="button"
+        >
+          🍝 Şef MiMi
+        </button>
+
+        <button
+          class="mode"
+          data-mode="fun"
+          type="button"
+        >
+          🎮 Eğlence
+        </button>
+
+        <button
+          class="mode"
+          data-mode="research"
+          type="button"
+        >
+          🔎 Araştırma
+        </button>
+      </nav>
+
+      <div id="chat" aria-live="polite">
+        <div class="message bot">Merhaba! Ben MiMiAi 🌸
+
+Bugün sohbet edebilir, yemek tarifi düşünebilir, ders çalışabilir veya birlikte eğlenebiliriz.</div>
+      </div>
+
+      <div class="composer">
+        <input
+          id="messageInput"
+          type="text"
+          placeholder="MiMiAi'ye bir şey yaz..."
+          autocomplete="off"
+          aria-label="Mesaj yaz"
+        >
+
+        <button
+          id="sendButton"
+          class="send-button"
+          type="button"
+        >
+          Gönder
+        </button>
+      </div>
+    </section>
+
+    <section
+      id="imagePanel"
+      class="panel"
+    >
+      <div class="image-panel-content">
+        <h2 class="image-title">Hayalindeki resmi tasarla</h2>
+
+        <p class="image-description">
+          Görmek istediğin resmi ayrıntılı şekilde tarif et. MiMiAi
+          seçtiğin stile uygun pastel bir taslak hazırlasın.
+        </p>
+
+        <label
+          class="prompt-label"
+          for="imagePrompt"
+        >
+          Resimde neler olsun?
+        </label>
+
+        <textarea
+          id="imagePrompt"
+          placeholder="Örnek: Lila elbiseli bir kız, çiçekli bir bahçede, pastel ve masalsı tarzda..."
+        ></textarea>
+
+        <div class="style-options">
+          <button
+            class="style-option active"
+            data-style="Pastel ve masalsı"
+            type="button"
+          >
+            🌸 Pastel
+          </button>
+
+          <button
+            class="style-option"
+            data-style="Gerçekçi ve zarif"
+            type="button"
+          >
+            📷 Gerçekçi
+          </button>
+
+          <button
+            class="style-option"
+            data-style="Sevimli çizgi film"
+            type="button"
+          >
+            🧸 Çizgi film
+          </button>
+
+          <button
+            class="style-option"
+            data-style="Zarif suluboya"
+            type="button"
+          >
+            🎨 Suluboya
+          </button>
+        </div>
+
+        <button
+          id="generateButton"
+          class="generate-button"
+          type="button"
+        >
+          ✨ Resmi Tasarla
+        </button>
+
+        <div class="image-result">
+          <div
+            id="imageCanvas"
+            class="image-canvas"
+            role="img"
+            aria-label="Pastel görsel taslağı"
+          >
+            <span class="decorative-flower flower-one">🌸</span>
+            <span class="decorative-flower flower-two">🌿</span>
+
+            <div class="preview-text">
+              <strong>MiMiAi Studio</strong>
+              <span id="previewDescription">
+                Açıklamanı yaz ve “Resmi Tasarla” düğmesine bas.
+              </span>
+            </div>
+          </div>
+
+          <p class="image-note">
+            Bu sürüm pastel bir ön izleme üretir. Gerçek AI resim üretimi,
+            güvenli yapay zekâ bağlantısı eklendiğinde çalışacaktır.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      MiMiAi • Pastel başlangıç sürümü
+    </footer>
+  </main>
+
+  <script>
+    const chatTab = document.getElementById("chatTab");
+    const imageTab = document.getElementById("imageTab");
+
+    const chatPanel = document.getElementById("chatPanel");
+    const imagePanel = document.getElementById("imagePanel");
+
+    const chat = document.getElementById("chat");
+    const messageInput = document.getElementById("messageInput");
+    const sendButton = document.getElementById("sendButton");
+
+    const modeButtons = document.querySelectorAll(".mode");
+    const styleButtons = document.querySelectorAll(".style-option");
+
+    const imagePrompt = document.getElementById("imagePrompt");
+    const generateButton = document.getElementById("generateButton");
+    const imageCanvas = document.getElementById("imageCanvas");
+    const previewDescription =
+      document.getElementById("previewDescription");
+
+    let currentMode = "normal";
+    let currentImageStyle = "Pastel ve masalsı";
+
+    function showPanel(panelName) {
+      const isChat = panelName === "chat";
+
+      chatTab.classList.toggle("active", isChat);
+      imageTab.classList.toggle("active", !isChat);
+
+      chatPanel.classList.toggle("active", isChat);
+      imagePanel.classList.toggle("active", !isChat);
+    }
+
+    chatTab.addEventListener("click", function () {
+      showPanel("chat");
+    });
+
+    imageTab.addEventListener("click", function () {
+      showPanel("image");
+    });
+
+    function addMessage(text, type, extraClass) {
+      const message = document.createElement("div");
+
+      message.className =
+        "message " +
+        type +
+        (extraClass ? " " + extraClass : "");
+
+      message.textContent = text;
+
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
+
+      return message;
+    }
+
+    function createReply(text) {
+      const lowerText = text.toLocaleLowerCase("tr");
+
+      if (
+        lowerText.includes("merhaba") ||
+        lowerText.includes("selam")
+      ) {
+        return "Merhaba 🌸 Bugün enerjim gayet yerinde. Sen nasılsın?";
+      }
+
+      if (lowerText.includes("oyun aç")) {
+        return "MiMi Oyun açıldı 🎮 Aklımdan 1 ile 10 arasında bir sayı tuttum. Tahmin et!";
+      }
+
+      if (lowerText.includes("doğum günüm")) {
+        return "İyi ki doğdun 🎉🎂🎁🎈!";
+      }
+
+      if (
+        lowerText.includes("yalnızım") ||
+        lowerText.includes("yalnız hissediyorum")
+      ) {
+        return "Böyle hissetmenin nedeni ne? Anlatmak istersen seni dinliyorum.";
+      }
+
+      if (
+        lowerText.includes("aptalım") ||
+        lowerText.includes("salakım")
+      ) {
+        return "Ben öyle düşünmüyorum. Bir şeyin zor gelmesi seni aptal yapmaz.";
+      }
+
+      if (lowerText.includes("başarabilir miyim")) {
+        return "Başaramasan da elinden geleni yapmış olursun. Yine de doğru planla şansını birlikte artırabiliriz.";
+      }
+
+      if (lowerText.includes("canım sıkılıyor")) {
+        return "Can sıkıntısı beynin düşük bütçeli bildirimidir. 😄 Bir oyun açalım mı?";
+      }
+
+      if (lowerText.includes("makarna")) {
+        return "Makarna tarafsız biçimde mükemmel bir fikir. 🍝 Evde hangi malzemeler var?";
+      }
+
+      if (currentMode === "teacher") {
+        return "Öğretmen modundayım 📚 Konuyu yaz; sana kolaydan zora doğru anlatayım.";
+      }
+
+      if (currentMode === "chef") {
+        return "Şef MiMi burada 🍝 Kaç kişilik yemek istiyorsun ve evde hangi malzemeler var?";
+      }
+
+      if (currentMode === "fun") {
+        return "Eğlence modu açık 🎮 Oyun, bilmece veya soğuk espri seçebilirsin.";
+      }
+
+      if (currentMode === "research") {
+        return "Araştırma modundayım 🔎 Gerçek internet araştırması, güvenli AI beynini bağladığımız sonraki aşamada çalışacak.";
+      }
+
+      return "Seni duydum 🌸 Şu anda tasarım ve deneme sürümündeyim. Gerçek AI beynim bağlandığında sana ayrıntılı cevap vereceğim.";
+    }
+
+    function sendMessage() {
+      const text = messageInput.value.trim();
+
+      if (!text) {
+        return;
+      }
+
+      addMessage(text, "user");
+      messageInput.value = "";
+
+      const typingMessage = addMessage(
+        "MiMiAi düşünüyor...",
+        "bot",
+        "typing"
+      );
+
+      window.setTimeout(function () {
+        typingMessage.remove();
+        addMessage(createReply(text), "bot");
+      }, 500);
+    }
+
+    sendButton.addEventListener("click", sendMessage);
+
+    messageInput.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    modeButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        modeButtons.forEach(function (item) {
+          item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+        currentMode = button.dataset.mode;
+
+        addMessage(
+          button.textContent.trim() + " modu açıldı.",
+          "bot"
+        );
+      });
+    });
+
+    styleButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        styleButtons.forEach(function (item) {
+          item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+        currentImageStyle = button.dataset.style;
+      });
+    });
+
+    function choosePreviewBackground(style) {
+      if (style === "Gerçekçi ve zarif") {
+        return (
+          "radial-gradient(circle at 25% 18%, #f1d5df, transparent 35%)," +
+          "radial-gradient(circle at 82% 20%, #f7e7af, transparent 33%)," +
+          "linear-gradient(145deg, #d9c8e7, #f6e8ed 50%, #d4ece1)"
+        );
+      }
+
+      if (style === "Sevimli çizgi film") {
+        return (
+          "radial-gradient(circle at 18% 18%, #ffcfe3, transparent 34%)," +
+          "radial-gradient(circle at 82% 18%, #ffeaa9, transparent 34%)," +
+          "radial-gradient(circle at 76% 82%, #c9f0df, transparent 36%)," +
+          "linear-gradient(145deg, #d9c4f1, #fff0f6)"
+        );
+      }
+
+      if (style === "Zarif suluboya") {
+        return (
+          "radial-gradient(circle at 20% 20%, rgba(219,185,233,.95), transparent 38%)," +
+          "radial-gradient(circle at 80% 22%, rgba(249,219,185,.9), transparent 38%)," +
+          "radial-gradient(circle at 70% 84%, rgba(190,229,211,.95), transparent 42%)," +
+          "linear-gradient(145deg, #fff5fa, #f2e9f8)"
+        );
+      }
+
+      return (
+        "radial-gradient(circle at 20% 20%, #f4cbdc, transparent 33%)," +
+        "radial-gradient(circle at 80% 18%, #f8e8a8, transparent 32%)," +
+        "radial-gradient(circle at 78% 82%, #c9eadc, transparent 36%)," +
+        "linear-gradient(145deg, #dbc6ed, #fff0f6 45%, #fff9dc 75%, #effbf6)"
+      );
+    }
+
+    generateButton.addEventListener("click", function () {
+      const prompt = imagePrompt.value.trim();
+
+      if (!prompt) {
+        previewDescription.textContent =
+          "Önce tasarlamak istediğin resmi tarif et 🌸";
+        imagePrompt.focus();
+        return;
+      }
+
+      generateButton.textContent = "✨ Tasarlanıyor...";
+      generateButton.disabled = true;
+
+      window.setTimeout(function () {
+        imageCanvas.style.background =
+          choosePreviewBackground(currentImageStyle);
+
+        previewDescription.textContent =
+          currentImageStyle + ": " + prompt;
+
+        generateButton.textContent = "✨ Yeniden Tasarla";
+        generateButton.disabled = false;
+      }, 700);
+    });
+  </script>
 </body>
 </html>
